@@ -20,5 +20,20 @@ namespace CryptoStats
         {
             InitializeComponent();
         }
+
+        [Serializable]
+        public class data
+        {
+            [JsonProperty("price_usd")]
+            public float price_usd { get; set; }
+            [JsonProperty("market_cap_usd")]
+            public float market_cap_usd { get; set; }
+            [JsonProperty("24h_volume_usd")]
+            public float day_volume_usd { get; set; }
+            [JsonProperty("available_supply")]
+            public float available_supply { get; set; }
+            [JsonProperty("percent_change_24h")]
+            public float percent_change_24h { get; set; }
+        }
     }
 }
