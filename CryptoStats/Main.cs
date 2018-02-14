@@ -35,5 +35,10 @@ namespace CryptoStats
             [JsonProperty("percent_change_24h")]
             public float percent_change_24h { get; set; }
         }
+
+        private void dataTimer_Tick(object sender, EventArgs e)
+        {
+            getData();
+        }
     }
 }
