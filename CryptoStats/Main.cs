@@ -19,6 +19,7 @@ namespace CryptoStats
         public Main()
         {
             InitializeComponent();
+            dataTimer.Start();
         }
 
         [Serializable]
@@ -39,6 +40,24 @@ namespace CryptoStats
         private void dataTimer_Tick(object sender, EventArgs e)
         {
             getData();
+        }
+
+        private void getData()
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    string btcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/bitcoin/");
+                    string ethJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/ethereum/");
+                    string ltcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/litecoin/");
+                    string adaJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/cardano/");
+                    string xmrJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/monero/");
+                    string vtcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/vertcoin/");
+                    string navJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/nav-coin/");
+                    string grsJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/groestlcoin/");
+                }
+            }
         }
     }
 }
