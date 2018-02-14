@@ -29,7 +29,7 @@ namespace CryptoStats
             [JsonProperty("price_usd")]
             public float price_usd { get; set; }
             [JsonProperty("market_cap_usd")]
-            public float market_cap_usd { get; set; }
+            public double market_cap_usd { get; set; }
             [JsonProperty("24h_volume_usd")]
             public float day_volume_usd { get; set; }
             [JsonProperty("available_supply")]
@@ -63,11 +63,11 @@ namespace CryptoStats
                     data bitcoin = JsonConvert.DeserializeObject<data>(btcJson);
 
                     // Bitcoin
-                    btcPrice.Text = bitcoin.price_usd.ToString();
-                    btcMarketCap.Text = bitcoin.market_cap_usd.ToString();
-                    btcVolume.Text = bitcoin.day_volume_usd.ToString();
-                    btcSupply.Text = bitcoin.available_supply.ToString();
-                    btcChange.Text = bitcoin.percent_change_24h.ToString();
+                    btcPrice.Text = bitcoin.price_usd.ToString("C");
+                    btcMarketCap.Text = bitcoin.market_cap_usd.ToString("C0");
+                    btcVolume.Text = bitcoin.day_volume_usd.ToString("C0");
+                    btcSupply.Text = bitcoin.available_supply.ToString("N0");
+                    btcChange.Text = bitcoin.percent_change_24h.ToString() + "%";
                 }            
             }
             catch(Exception)
