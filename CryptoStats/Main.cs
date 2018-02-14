@@ -20,6 +20,7 @@ namespace CryptoStats
         {
             InitializeComponent();
             dataTimer.Start();
+            getData();
         }
 
         [Serializable]
@@ -56,8 +57,30 @@ namespace CryptoStats
                     string vtcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/vertcoin/");
                     string navJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/nav-coin/");
                     string grsJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/groestlcoin/");
-                }
+
+                    btcJson = format(btcJson);
+
+                    data bitcoin = JsonConvert.DeserializeObject<data>(btcJson);
+
+                    // Bitcoin
+                    btcPrice.Text = bitcoin.price_usd.ToString();
+                    btcMarketCap.Text = bitcoin.market_cap_usd.ToString();
+                    btcVolume.Text = bitcoin.day_volume_usd.ToString();
+                    btcSupply.Text = bitcoin.available_supply.ToString();
+                    btcChange.Text = bitcoin.percent_change_24h.ToString();
+                }            
             }
+            catch(Exception)
+            {
+                dataTimer.Stop();
+            }
+        }
+
+        private string format(string json)
+        {
+            json = json.Replace("[", "");
+            json = json.Replace("]", "");
+            return json;
         }
     }
 }
