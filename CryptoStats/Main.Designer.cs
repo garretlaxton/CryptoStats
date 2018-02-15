@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.mainForm = new FlatUI.FormSkin();
             this.minimize = new FlatUI.FlatMini();
             this.close = new FlatUI.FlatClose();
@@ -1298,6 +1299,7 @@
             this.ClientSize = new System.Drawing.Size(921, 461);
             this.Controls.Add(this.mainForm);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
