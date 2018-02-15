@@ -33,7 +33,7 @@ namespace CryptoStats
             [JsonProperty("24h_volume_usd")]
             public float day_volume_usd { get; set; }
             [JsonProperty("available_supply")]
-            public float available_supply { get; set; }
+            public double available_supply { get; set; }
             [JsonProperty("percent_change_24h")]
             public float percent_change_24h { get; set; }
         }
