@@ -59,8 +59,23 @@ namespace CryptoStats
                     string grsJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/groestlcoin/");
 
                     btcJson = format(btcJson);
+                    ethJson = format(ethJson);
+                    ltcJson = format(ltcJson);
+                    adaJson = format(adaJson);
+                    xmrJson = format(xmrJson);
+                    vtcJson = format(vtcJson);
+                    navJson = format(navJson);
+                    grsJson = format(grsJson);
 
                     data bitcoin = JsonConvert.DeserializeObject<data>(btcJson);
+                    data ether = JsonConvert.DeserializeObject<data>(ethJson);
+                    data litecoin = JsonConvert.DeserializeObject<data>(ltcJson);
+                    data cardano = JsonConvert.DeserializeObject<data>(adaJson);
+                    data monero = JsonConvert.DeserializeObject<data>(xmrJson);
+                    data vertcoin = JsonConvert.DeserializeObject<data>(vtcJson);
+                    data nav = JsonConvert.DeserializeObject<data>(navJson);
+                    data groestl = JsonConvert.DeserializeObject<data>(grsJson);
+
 
                     // Bitcoin
                     btcPrice.Text = bitcoin.price_usd.ToString("C");
@@ -68,6 +83,55 @@ namespace CryptoStats
                     btcVolume.Text = bitcoin.day_volume_usd.ToString("C0");
                     btcSupply.Text = bitcoin.available_supply.ToString("N0");
                     btcChange.Text = bitcoin.percent_change_24h.ToString() + "%";
+
+                    // Ethereum
+                    ethPrice.Text = ether.price_usd.ToString("C");
+                    ethMarketCap.Text = ether.market_cap_usd.ToString("C0");
+                    ethVolume.Text = ether.day_volume_usd.ToString("C0");
+                    ethSupply.Text = ether.available_supply.ToString("N0");
+                    ethChange.Text = ether.percent_change_24h.ToString() + "%";
+
+                    // Litecoin
+                    ltcPrice.Text = litecoin.price_usd.ToString("C");
+                    ltcMarketCap.Text = litecoin.market_cap_usd.ToString("C0");
+                    ltcVolume.Text = litecoin.day_volume_usd.ToString("C0");
+                    ltcSupply.Text = litecoin.available_supply.ToString("N0");
+                    ltcChange.Text = litecoin.percent_change_24h.ToString() + "%";
+
+                    // Cardano
+                    adaPrice.Text = cardano.price_usd.ToString("C");
+                    adaMarketCap.Text = cardano.market_cap_usd.ToString("C0");
+                    adaVolume.Text = cardano.day_volume_usd.ToString("C0");
+                    adaSupply.Text = cardano.available_supply.ToString("N0");
+                    adaChange.Text = cardano.percent_change_24h.ToString() + "%";
+
+                    // Monero
+                    xmrPrice.Text = monero.price_usd.ToString("C");
+                    xmrMarketCap.Text = monero.market_cap_usd.ToString("C0");
+                    xmrVolume.Text = monero.day_volume_usd.ToString("C0");
+                    xmrSupply.Text = monero.available_supply.ToString("N0");
+                    xmrChange.Text = monero.percent_change_24h.ToString() + "%";
+
+                    // Vertcoin
+                    vtcPrice.Text = vertcoin.price_usd.ToString("C");
+                    vtcMarketCap.Text = vertcoin.market_cap_usd.ToString("C0");
+                    vtcVolume.Text = vertcoin.day_volume_usd.ToString("C0");
+                    vtcSupply.Text = vertcoin.available_supply.ToString("N0");
+                    vtcChange.Text = vertcoin.percent_change_24h.ToString() + "%";
+
+                    // NAV
+                    navPrice.Text = nav.price_usd.ToString("C");
+                    navMarketCap.Text = nav.market_cap_usd.ToString("C0");
+                    navVolume.Text = nav.day_volume_usd.ToString("C0");
+                    navSupply.Text = nav.available_supply.ToString("N0");
+                    navChange.Text = nav.percent_change_24h.ToString() + "%";
+
+                    // Groestl
+                    grsPrice.Text = groestl.price_usd.ToString("C");
+                    grsMarketCap.Text = groestl.market_cap_usd.ToString("C0");
+                    grsVolume.Text = groestl.day_volume_usd.ToString("C0");
+                    grsSupply.Text = groestl.available_supply.ToString("N0");
+                    grsChange.Text = groestl.percent_change_24h.ToString() + "%";
                 }            
             }
             catch(Exception)
