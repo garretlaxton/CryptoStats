@@ -1,4032 +1,3629 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
+﻿/// <summary>
+/// Modal Theme
+/// Author : THE LORD
+/// Release Date : Monday, January 16, 2017
+/// HF Account : https://hackforums.net/member.php?action=profile&uid=3304362
+/// PM Me for any bug.
+/// </summary>
+
+#region NampeSpaces
+
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Windows.Forms;
+using System.Drawing;
+using System.ComponentModel;
 
-namespace FlatUI
+#endregion
+
+#region Helper Methods
+
+public class HelperMethods
 {
-    public class FlatAlertBox : Control
-    {
-        /// <summary>
-        /// How to use: FlatAlertBox.ShowControl(Kind, String, Interval)
-        /// </summary>
-        /// <remarks></remarks>
 
-        private int W;
-        private int H;
-        private _Kind K;
-        private string _Text;
-        private MouseState State = MouseState.None;
-        private int X;
-        private Timer withEventsField_T;
-        private Timer T
+    public GraphicsPath GP = null;
+
+    public enum MouseMode
+    {
+        NormalMode,
+        Hovered,
+        Pushed
+    };
+
+    public void DrawImageFromBase64(Graphics G, string Base64Image, Rectangle Rect)
+    {
+        Image IM = null;
+        using (System.IO.MemoryStream ms = new System.IO.MemoryStream(Convert.FromBase64String(Base64Image)))
         {
-            get { return withEventsField_T; }
-            set
+            IM = System.Drawing.Image.FromStream(ms);
+        }
+        G.DrawImage(IM, Rect);
+    }
+
+    public GraphicsPath RoundRec(Rectangle r, int Curve, bool TopLeft = true, bool TopRight = true, bool BottomLeft = true, bool BottomRight = true)
+    {
+        GraphicsPath CreateRoundPath = new GraphicsPath(FillMode.Winding);
+        if (TopLeft)
+        {
+            CreateRoundPath.AddArc(r.X, r.Y, Curve, Curve, 180f, 90f);
+        }
+        else
+        {
+            CreateRoundPath.AddLine(r.X, r.Y, r.X, r.Y);
+        }
+        if (TopRight)
+        {
+            CreateRoundPath.AddArc(r.Right - Curve, r.Y, Curve, Curve, 270f, 90f);
+        }
+        else
+        {
+            CreateRoundPath.AddLine(r.Right - r.Width, r.Y, r.Width, r.Y);
+        }
+        if (BottomRight)
+        {
+            CreateRoundPath.AddArc(r.Right - Curve, r.Bottom - Curve, Curve, Curve, 0f, 90f);
+        }
+        else
+        {
+            CreateRoundPath.AddLine(r.Right, r.Bottom, r.Right, r.Bottom);
+
+        }
+        if (BottomLeft)
+        {
+            CreateRoundPath.AddArc(r.X, r.Bottom - Curve, Curve, Curve, 90f, 90f);
+        }
+        else
+        {
+            CreateRoundPath.AddLine(r.X, r.Bottom, r.X, r.Bottom);
+        }
+        CreateRoundPath.CloseFigure();
+        return CreateRoundPath;
+    }
+
+    public void FillRoundedPath(Graphics G, Color C, Rectangle Rect, int Curve)
+    {
+        G.FillPath(new SolidBrush(C), RoundRec(Rect, Curve));
+    }
+
+    public void FillRoundedPath(Graphics G, Brush B, Rectangle Rect, int Curve)
+    {
+        G.FillPath(B, RoundRec(Rect, Curve));
+    }
+
+    public void DrawRoundedPath(Graphics G, Color C, Single Size, Rectangle Rect, int Curve)
+    {
+        G.DrawPath(new Pen(C, Size), RoundRec(Rect, Curve));
+
+    }
+
+    public void DrawTriangle(Graphics G, Color C, Single Size, Point P1_0, Point P1_1, Point P2_0, Point P2_1, Point P3_0, Point P3_1)
+    {
+
+        G.DrawLine(new Pen(C, Size), P1_0, P1_1);
+        G.DrawLine(new Pen(C, Size), P2_0, P2_1);
+        G.DrawLine(new Pen(C, Size), P3_0, P3_1);
+
+    }
+
+    public Pen PenRGBColor(int R, int G, int B, Single size)
+    { return new Pen(System.Drawing.Color.FromArgb(R, G, B), size); }
+
+    public Pen PenHTMlColor(String C_WithoutHash, float Thick)
+    { return new Pen(GetHTMLColor(C_WithoutHash), Thick); }
+
+    public SolidBrush SolidBrushRGBColor(int R, int G, int B, int A = 0)
+    { return new SolidBrush(System.Drawing.Color.FromArgb(A, R, G, B)); }
+
+    public SolidBrush SolidBrushHTMlColor(String C_WithoutHash)
+    { return new SolidBrush(GetHTMLColor(C_WithoutHash)); }
+
+    public Color GetHTMLColor(String C_WithoutHash)
+    { return ColorTranslator.FromHtml("#" + C_WithoutHash); }
+
+    public String ColorToHTML(Color C)
+    { return ColorTranslator.ToHtml(C); }
+
+    public Color SetARGB(int A, int R, int G, int B)
+    { return System.Drawing.Color.FromArgb(A, R, G, B); }
+
+    public Color SetRGB(int R, int G, int B)
+    { return System.Drawing.Color.FromArgb(R, G, B); }
+
+    public void CentreString(Graphics G, String Text, Font font, Brush brush, Rectangle Rect)
+    { G.DrawString(Text, font, brush, new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }); }
+
+    public void LeftString(Graphics G, String Text, Font font, Brush brush, Rectangle Rect)
+    {
+        G.DrawString(Text, font, brush, new Rectangle(4, Rect.Y + Convert.ToInt32(Rect.Height / 2) - Convert.ToInt32(G.MeasureString(Text, font).Height / 2) + 0, Rect.Width, Rect.Height), new StringFormat { Alignment = StringAlignment.Near });
+    }
+
+    public void RightString(Graphics G, string Text, Font font, Brush brush, Rectangle Rect)
+    {
+        G.DrawString(Text, font, brush, new Rectangle(4, Convert.ToInt32(Rect.Y + (Rect.Height / 2) - (G.MeasureString(Text, font).Height / 2)), Rect.Width - Rect.Height + 10, Rect.Height), new StringFormat { Alignment = StringAlignment.Far });
+    }
+}
+
+#endregion
+
+#region Skin
+
+public class ModalTheme : ContainerControl
+{
+
+    #region  Variables
+
+    bool Movable = false;
+    private TitlePostion _TitleTextPostion = TitlePostion.Left;
+    private Point MousePoint = new Point(0, 0);
+    private int MoveHeight = 50;
+    private static HelperMethods H = new HelperMethods();
+    private int _BorderThickness = 1;
+    private bool _ShowIcon;
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            G.FillRectangle(H.SolidBrushHTMlColor("331f35"), new Rectangle(0, 0, Width, Height));
+
+            G.FillRectangle(H.SolidBrushHTMlColor("241525"), new Rectangle(0, 0, Width, 55));
+
+            G.DrawLine(H.PenHTMlColor("231024", 1), new Point(0, 55), new Point(Width, 55));
+
+            G.DrawRectangle(H.PenHTMlColor("241525", BorderThickness), new Rectangle(0, 0, Width, Height));
+
+            if (FindForm().ShowIcon)
             {
-                if (withEventsField_T != null)
+                if (FindForm().Icon != null)
                 {
-                    withEventsField_T.Tick -= T_Tick;
+                    switch (TitleTextPostion)
+                    {
+                        case TitlePostion.Left:
+                            G.DrawString(Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), 27, 15);
+                            G.DrawIcon(FindForm().Icon, new Rectangle(5, 16, 20, 20));
+                            break;
+                        case TitlePostion.Center:
+                            H.CentreString(G, Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), new Rectangle(0, 0, Width, 50));
+                            G.DrawIcon(FindForm().Icon, new Rectangle(5, 16, 20, 20));
+                            break;
+                        case TitlePostion.Right:
+                            H.RightString(G, Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), new Rectangle(0, 0, Width, 50));
+                            G.DrawIcon(FindForm().Icon, new Rectangle(Width - 30, 16, 20, 20));
+                            break;
+                    }
                 }
-                withEventsField_T = value;
-                if (withEventsField_T != null)
-                {
-                    withEventsField_T.Tick += T_Tick;
-                }
-            }
 
-        }
-
-        [Flags()]
-        public enum _Kind
-        {
-            Success,
-            Error,
-            Info
-        }
-
-        [Category("Options")]
-        public _Kind kind
-        {
-            get { return K; }
-            set { K = value; }
-        }
-
-        [Category("Options")]
-        public override string Text
-        {
-            get { return base.Text; }
-            set
-            {
-                base.Text = value;
-                if (_Text != null)
-                {
-                    _Text = value;
-                }
-            }
-        }
-
-        [Category("Options")]
-        public new bool Visible
-        {
-            get { return base.Visible == false; }
-            set { base.Visible = value; }
-        }
-
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 42;
-        }
-
-        public void ShowControl(_Kind Kind, string Str, int Interval)
-        {
-            K = Kind;
-            Text = Str;
-            this.Visible = true;
-            T = new Timer();
-            T.Interval = Interval;
-            T.Enabled = true;
-        }
-
-        private void T_Tick(object sender, EventArgs e)
-        {
-            this.Visible = false;
-            T.Enabled = false;
-            T.Dispose();
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            X = e.X;
-            Invalidate();
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            this.Visible = false;
-        }
-
-        private Color SuccessColor = Color.FromArgb(60, 85, 79);
-        private Color SuccessText = Color.FromArgb(35, 169, 110);
-        private Color ErrorColor = Color.FromArgb(87, 71, 71);
-        private Color ErrorText = Color.FromArgb(254, 142, 122);
-        private Color InfoColor = Color.FromArgb(70, 91, 94);
-        private Color InfoText = Color.FromArgb(97, 185, 186);
-
-        public FlatAlertBox()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.FromArgb(60, 70, 73);
-            Size = new Size(576, 42);
-            Location = new Point(10, 61);
-            Font = new Font("Segoe UI", 10);
-            Cursor = Cursors.Hand;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            Rectangle Base = new Rectangle(0, 0, W, H);
-
-            var _with14 = G;
-            _with14.SmoothingMode = SmoothingMode.HighQuality;
-            _with14.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with14.Clear(BackColor);
-
-            switch (K)
-            {
-                case _Kind.Success:
-                    //-- Base
-                    _with14.FillRectangle(new SolidBrush(SuccessColor), Base);
-
-                    //-- Ellipse
-                    _with14.FillEllipse(new SolidBrush(SuccessText), new Rectangle(8, 9, 24, 24));
-                    _with14.FillEllipse(new SolidBrush(SuccessColor), new Rectangle(10, 11, 20, 20));
-
-                    //-- Checked Sign
-                    _with14.DrawString("ü", new Font("Wingdings", 22), new SolidBrush(SuccessText), new Rectangle(7, 7, W, H), Helpers.NearSF);
-                    _with14.DrawString(Text, Font, new SolidBrush(SuccessText), new Rectangle(48, 12, W, H), Helpers.NearSF);
-
-                    //-- X button
-                    _with14.FillEllipse(new SolidBrush(Color.FromArgb(35, Color.Black)), new Rectangle(W - 30, H - 29, 17, 17));
-                    _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(SuccessColor), new Rectangle(W - 28, 16, W, H), Helpers.NearSF);
-
-                    switch (State)
-                    {
-                        // -- Mouse Over
-                        case MouseState.Over:
-                            _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(Color.FromArgb(25, Color.White)), new Rectangle(W - 28, 16, W, H), Helpers.NearSF);
-                            break;
-                    }
-
-                    break;
-                case _Kind.Error:
-                    //-- Base
-                    _with14.FillRectangle(new SolidBrush(ErrorColor), Base);
-
-                    //-- Ellipse
-                    _with14.FillEllipse(new SolidBrush(ErrorText), new Rectangle(8, 9, 24, 24));
-                    _with14.FillEllipse(new SolidBrush(ErrorColor), new Rectangle(10, 11, 20, 20));
-
-                    //-- X Sign
-                    _with14.DrawString("r", new Font("Marlett", 16), new SolidBrush(ErrorText), new Rectangle(6, 11, W, H), Helpers.NearSF);
-                    _with14.DrawString(Text, Font, new SolidBrush(ErrorText), new Rectangle(48, 12, W, H), Helpers.NearSF);
-
-                    //-- X button
-                    _with14.FillEllipse(new SolidBrush(Color.FromArgb(35, Color.Black)), new Rectangle(W - 32, H - 29, 17, 17));
-                    _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(ErrorColor), new Rectangle(W - 30, 17, W, H), Helpers.NearSF);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            // -- Mouse Over
-                            _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(Color.FromArgb(25, Color.White)), new Rectangle(W - 30, 15, W, H), Helpers.NearSF);
-                            break;
-                    }
-
-                    break;
-                case _Kind.Info:
-                    //-- Base
-                    _with14.FillRectangle(new SolidBrush(InfoColor), Base);
-
-                    //-- Ellipse
-                    _with14.FillEllipse(new SolidBrush(InfoText), new Rectangle(8, 9, 24, 24));
-                    _with14.FillEllipse(new SolidBrush(InfoColor), new Rectangle(10, 11, 20, 20));
-
-                    //-- Info Sign
-                    _with14.DrawString("¡", new Font("Segoe UI", 20, FontStyle.Bold), new SolidBrush(InfoText), new Rectangle(12, -4, W, H), Helpers.NearSF);
-                    _with14.DrawString(Text, Font, new SolidBrush(InfoText), new Rectangle(48, 12, W, H), Helpers.NearSF);
-
-                    //-- X button
-                    _with14.FillEllipse(new SolidBrush(Color.FromArgb(35, Color.Black)), new Rectangle(W - 32, H - 29, 17, 17));
-                    _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(InfoColor), new Rectangle(W - 30, 17, W, H), Helpers.NearSF);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            // -- Mouse Over
-                            _with14.DrawString("r", new Font("Marlett", 8), new SolidBrush(Color.FromArgb(25, Color.White)), new Rectangle(W - 30, 17, W, H), Helpers.NearSF);
-                            break;
-                    }
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatButton : Control
-    {
-        private int W;
-        private int H;
-        private bool _Rounded = false;
-        private MouseState State = MouseState.None;
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color TextColor
-        {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        [Category("Options")]
-        public bool Rounded
-        {
-            get { return _Rounded; }
-            set { _Rounded = value; }
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        private Color _BaseColor = Helpers.FlatColor;
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatButton()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-            Size = new Size(106, 32);
-            BackColor = Color.Transparent;
-            Font = new Font("Segoe UI", 12);
-            Cursor = Cursors.Hand;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            GraphicsPath GP = new GraphicsPath();
-            Rectangle Base = new Rectangle(0, 0, W, H);
-
-            var _with8 = G;
-            _with8.SmoothingMode = SmoothingMode.HighQuality;
-            _with8.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with8.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with8.Clear(BackColor);
-
-            switch (State)
-            {
-                case MouseState.None:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = Helpers.RoundRec(Base, 6);
-                        _with8.FillPath(new SolidBrush(_BaseColor), GP);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with8.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    break;
-                case MouseState.Over:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = Helpers.RoundRec(Base, 6);
-                        _with8.FillPath(new SolidBrush(_BaseColor), GP);
-                        _with8.FillPath(new SolidBrush(Color.FromArgb(20, Color.White)), GP);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with8.FillRectangle(new SolidBrush(_BaseColor), Base);
-                        _with8.FillRectangle(new SolidBrush(Color.FromArgb(20, Color.White)), Base);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    break;
-                case MouseState.Down:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = Helpers.RoundRec(Base, 6);
-                        _with8.FillPath(new SolidBrush(_BaseColor), GP);
-                        _with8.FillPath(new SolidBrush(Color.FromArgb(20, Color.Black)), GP);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with8.FillRectangle(new SolidBrush(_BaseColor), Base);
-                        _with8.FillRectangle(new SolidBrush(Color.FromArgb(20, Color.Black)), Base);
-
-                        //-- Text
-                        _with8.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _BaseColor = colors.Flat;
-        }
-    }
-}
-namespace FlatUI
-{
-    [DefaultEvent("CheckedChanged")]
-    public class FlatCheckBox : Control
-    {
-        private int W;
-        private int H;
-        private MouseState State = MouseState.None;
-        private _Options O;
-        private bool _Checked;
-
-        protected override void OnTextChanged(System.EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
-
-        public bool Checked
-        {
-            get { return _Checked; }
-            set
-            {
-                _Checked = value;
-                Invalidate();
-            }
-        }
-
-        public event CheckedChangedEventHandler CheckedChanged;
-        public delegate void CheckedChangedEventHandler(object sender);
-        protected override void OnClick(System.EventArgs e)
-        {
-            _Checked = !_Checked;
-            if (CheckedChanged != null)
-            {
-                CheckedChanged(this);
-            }
-            base.OnClick(e);
-        }
-
-        [Flags()]
-        public enum _Options
-        {
-            Style1,
-            Style2
-        }
-
-        [Category("Options")]
-        public _Options Options
-        {
-            get { return O; }
-            set { O = value; }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 22;
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color BorderColor
-        {
-            get { return _BorderColor; }
-            set { _BorderColor = value; }
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-        private Color _BorderColor = Helpers.FlatColor;
-
-        public FlatCheckBox()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.FromArgb(60, 70, 73);
-            Cursor = Cursors.Hand;
-            Font = new Font("Segoe UI", 10);
-            Size = new Size(112, 22);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            Rectangle Base = new Rectangle(0, 2, Height - 5, Height - 5);
-
-            var _with11 = G;
-            _with11.SmoothingMode = SmoothingMode.HighQuality;
-            _with11.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with11.Clear(BackColor);
-            switch (O)
-            {
-                case _Options.Style1:
-                    //-- Style 1
-                    //-- Base
-                    _with11.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            //-- Base
-                            _with11.DrawRectangle(new Pen(_BorderColor), Base);
-                            break;
-                        case MouseState.Down:
-                            //-- Base
-                            _with11.DrawRectangle(new Pen(_BorderColor), Base);
-                            break;
-                    }
-
-                    //-- If Checked
-                    if (Checked)
-                    {
-                        _with11.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(_BorderColor), new Rectangle(5, 7, H - 9, H - 9), Helpers.CenterSF);
-                    }
-
-                    //-- If Enabled
-                    if (this.Enabled == false)
-                    {
-                        _with11.FillRectangle(new SolidBrush(Color.FromArgb(54, 58, 61)), Base);
-                        _with11.DrawString(Text, Font, new SolidBrush(Color.FromArgb(140, 142, 143)), new Rectangle(20, 2, W, H), Helpers.NearSF);
-                    }
-
-                    //-- Text
-                    _with11.DrawString(Text, Font, new SolidBrush(_TextColor), new Rectangle(20, 2, W, H), Helpers.NearSF);
-                    break;
-                case _Options.Style2:
-                    //-- Style 2
-                    //-- Base
-                    _with11.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            //-- Base
-                            _with11.DrawRectangle(new Pen(_BorderColor), Base);
-                            _with11.FillRectangle(new SolidBrush(Color.FromArgb(118, 213, 170)), Base);
-                            break;
-                        case MouseState.Down:
-                            //-- Base
-                            _with11.DrawRectangle(new Pen(_BorderColor), Base);
-                            _with11.FillRectangle(new SolidBrush(Color.FromArgb(118, 213, 170)), Base);
-                            break;
-                    }
-
-                    //-- If Checked
-                    if (Checked)
-                    {
-                        _with11.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(_BorderColor), new Rectangle(5, 7, H - 9, H - 9), Helpers.CenterSF);
-                    }
-
-                    //-- If Enabled
-                    if (this.Enabled == false)
-                    {
-                        _with11.FillRectangle(new SolidBrush(Color.FromArgb(54, 58, 61)), Base);
-                        _with11.DrawString(Text, Font, new SolidBrush(Color.FromArgb(48, 119, 91)), new Rectangle(20, 2, W, H), Helpers.NearSF);
-                    }
-
-                    //-- Text
-                    _with11.DrawString(Text, Font, new SolidBrush(_TextColor), new Rectangle(20, 2, W, H), Helpers.NearSF);
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _BorderColor = colors.Flat;
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatClose : Control
-    {
-        private MouseState State = MouseState.None;
-        private int x;
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            x = e.X;
-            Invalidate();
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            Environment.Exit(0);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Size = new Size(18, 18);
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color TextColor
-        {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        private Color _BaseColor = Color.FromArgb(168, 35, 35);
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatClose()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.White;
-            Size = new Size(18, 18);
-            Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Font = new Font("Marlett", 10);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-
-            Rectangle Base = new Rectangle(0, 0, Width, Height);
-
-            var _with3 = G;
-            _with3.SmoothingMode = SmoothingMode.HighQuality;
-            _with3.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with3.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with3.Clear(BackColor);
-
-            //-- Base
-            _with3.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-            //-- X
-            _with3.DrawString("r", Font, new SolidBrush(TextColor), new Rectangle(0, 0, Width, Height), Helpers.CenterSF);
-
-            //-- Hover/down
-            switch (State)
-            {
-                case MouseState.Over:
-                    _with3.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.White)), Base);
-                    break;
-                case MouseState.Down:
-                    _with3.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.Black)), Base);
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatColorPalette : Control
-    {
-        private int W;
-        private int H;
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Width = 180;
-            Height = 80;
-        }
-
-        [Category("Colors")]
-        public Color Red
-        {
-            get { return _Red; }
-            set { _Red = value; }
-        }
-
-        [Category("Colors")]
-        public Color Cyan
-        {
-            get { return _Cyan; }
-            set { _Cyan = value; }
-        }
-
-        [Category("Colors")]
-        public Color Blue
-        {
-            get { return _Blue; }
-            set { _Blue = value; }
-        }
-
-        [Category("Colors")]
-        public Color LimeGreen
-        {
-            get { return _LimeGreen; }
-            set { _LimeGreen = value; }
-        }
-
-        [Category("Colors")]
-        public Color Orange
-        {
-            get { return _Orange; }
-            set { _Orange = value; }
-        }
-
-        [Category("Colors")]
-        public Color Purple
-        {
-            get { return _Purple; }
-            set { _Purple = value; }
-        }
-
-        [Category("Colors")]
-        public Color Black
-        {
-            get { return _Black; }
-            set { _Black = value; }
-        }
-
-        [Category("Colors")]
-        public Color Gray
-        {
-            get { return _Gray; }
-            set { _Gray = value; }
-        }
-
-        [Category("Colors")]
-        public Color White
-        {
-            get { return _White; }
-            set { _White = value; }
-        }
-
-        private Color _Red = Color.FromArgb(220, 85, 96);
-        private Color _Cyan = Color.FromArgb(10, 154, 157);
-        private Color _Blue = Color.FromArgb(0, 128, 255);
-        private Color _LimeGreen = Color.FromArgb(35, 168, 109);
-        private Color _Orange = Color.FromArgb(253, 181, 63);
-        private Color _Purple = Color.FromArgb(155, 88, 181);
-        private Color _Black = Color.FromArgb(45, 47, 49);
-        private Color _Gray = Color.FromArgb(63, 70, 73);
-        private Color _White = Color.FromArgb(243, 243, 243);
-
-        public FlatColorPalette()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.FromArgb(60, 70, 73);
-            Size = new Size(160, 80);
-            Font = new Font("Segoe UI", 12);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            var _with6 = G;
-            _with6.SmoothingMode = SmoothingMode.HighQuality;
-            _with6.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with6.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with6.Clear(BackColor);
-
-            //-- Colors 
-            _with6.FillRectangle(new SolidBrush(_Red), new Rectangle(0, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Cyan), new Rectangle(20, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Blue), new Rectangle(40, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_LimeGreen), new Rectangle(60, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Orange), new Rectangle(80, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Purple), new Rectangle(100, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Black), new Rectangle(120, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_Gray), new Rectangle(140, 0, 20, 40));
-            _with6.FillRectangle(new SolidBrush(_White), new Rectangle(160, 0, 20, 40));
-
-            //-- Text
-            _with6.DrawString("Color Palette", Font, new SolidBrush(_White), new Rectangle(0, 22, W, H), Helpers.CenterSF);
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatColors
-    {
-        public Color Flat = Helpers.FlatColor;
-    }
-}
-namespace FlatUI
-{
-    public class FlatComboBox : ComboBox
-    {
-        private int W;
-        private int H;
-        private int _StartIndex = 0;
-        private int x;
-        private int y;
-
-        private MouseState State = MouseState.None;
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            x = e.Location.X;
-            y = e.Location.Y;
-            Invalidate();
-            if (e.X < Width - 41)
-                Cursor = Cursors.IBeam;
-            else
-                Cursor = Cursors.Hand;
-        }
-
-        protected override void OnDrawItem(DrawItemEventArgs e)
-        {
-            base.OnDrawItem(e);
-            Invalidate();
-            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-            {
-                Invalidate();
-            }
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            Invalidate();
-        }
-
-        [Category("Colors")]
-        public Color HoverColor
-        {
-            get { return _HoverColor; }
-            set { _HoverColor = value; }
-        }
-
-        private int StartIndex
-        {
-            get { return _StartIndex; }
-            set
-            {
-                _StartIndex = value;
-                try
-                {
-                    base.SelectedIndex = value;
-                }
-                catch
-                {
-                }
-                Invalidate();
-            }
-        }
-
-        public void DrawItem_(System.Object sender, System.Windows.Forms.DrawItemEventArgs e)
-        {
-            if (e.Index < 0)
-                return;
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-            {
-                //-- Selected item
-                e.Graphics.FillRectangle(new SolidBrush(_HoverColor), e.Bounds);
             }
             else
             {
-                //-- Not Selected
-                e.Graphics.FillRectangle(new SolidBrush(_BaseColor), e.Bounds);
-            }
-
-            //-- Text
-            e.Graphics.DrawString(base.GetItemText(base.Items[e.Index]), new Font("Segoe UI", 8), Brushes.White, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, e.Bounds.Width, e.Bounds.Height));
-
-
-            e.Graphics.Dispose();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 18;
-        }
-
-        private Color _BaseColor = Color.FromArgb(25, 27, 29);
-        private Color _BGColor = Color.FromArgb(45, 47, 49);
-        private Color _HoverColor = Color.FromArgb(35, 168, 109);
-
-        public FlatComboBox()
-        {
-            DrawItem += DrawItem_;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-
-            DrawMode = DrawMode.OwnerDrawFixed;
-            BackColor = Color.FromArgb(45, 45, 48);
-            ForeColor = Color.White;
-            DropDownStyle = ComboBoxStyle.DropDownList;
-            Cursor = Cursors.Hand;
-            StartIndex = 0;
-            ItemHeight = 18;
-            Font = new Font("Segoe UI", 8, FontStyle.Regular);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width;
-            H = Height;
-
-            Rectangle Base = new Rectangle(0, 0, W, H);
-            Rectangle Button = new Rectangle(Convert.ToInt32(W - 40), 0, W, H);
-            GraphicsPath GP = new GraphicsPath();
-            GraphicsPath GP2 = new GraphicsPath();
-
-            var _with16 = G;
-            _with16.Clear(Color.FromArgb(45, 45, 48));
-            _with16.SmoothingMode = SmoothingMode.HighQuality;
-            _with16.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with16.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-
-            //-- Base
-            _with16.FillRectangle(new SolidBrush(_BGColor), Base);
-
-            //-- Button
-            GP.Reset();
-            GP.AddRectangle(Button);
-            _with16.SetClip(GP);
-            _with16.FillRectangle(new SolidBrush(_BaseColor), Button);
-            _with16.ResetClip();
-
-            //-- Lines
-            _with16.DrawLine(Pens.White, W - 10, 6, W - 30, 6);
-            _with16.DrawLine(Pens.White, W - 10, 12, W - 30, 12);
-            _with16.DrawLine(Pens.White, W - 10, 18, W - 30, 18);
-
-            //-- Text
-            _with16.DrawString(Text, Font, Brushes.White, new Point(4, 6), Helpers.NearSF);
-
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatContextMenuStrip : ContextMenuStrip
-    {
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
-
-        public FlatContextMenuStrip()
-            : base()
-        {
-            Renderer = new ToolStripProfessionalRenderer(new TColorTable());
-            ShowImageMargin = false;
-            ForeColor = Color.White;
-            Font = new Font("Segoe UI", 8);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-        }
-
-        public class TColorTable : ProfessionalColorTable
-        {
-            [Category("Colors")]
-            public Color _BackColor
-            {
-                get { return BackColor; }
-                set { BackColor = value; }
-            }
-
-            [Category("Colors")]
-            public Color _CheckedColor
-            {
-                get { return CheckedColor; }
-                set { CheckedColor = value; }
-            }
-
-            [Category("Colors")]
-            public Color _BorderColor
-            {
-                get { return BorderColor; }
-                set { BorderColor = value; }
-            }
-
-            private Color BackColor = Color.FromArgb(45, 47, 49);
-            private Color CheckedColor = Helpers.FlatColor;
-            private Color BorderColor = Color.FromArgb(53, 58, 60);
-
-            public override Color ButtonSelectedBorder
-            {
-                get { return BackColor; }
-            }
-
-            public override Color CheckBackground
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color CheckPressedBackground
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color CheckSelectedBackground
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color ImageMarginGradientBegin
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color ImageMarginGradientEnd
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color ImageMarginGradientMiddle
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color MenuBorder
-            {
-                get { return BorderColor; }
-            }
-
-            public override Color MenuItemBorder
-            {
-                get { return BorderColor; }
-            }
-
-            public override Color MenuItemSelected
-            {
-                get { return CheckedColor; }
-            }
-
-            public override Color SeparatorDark
-            {
-                get { return BorderColor; }
-            }
-
-            public override Color ToolStripDropDownBackground
-            {
-                get { return BackColor; }
-            }
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatGroupBox : ContainerControl
-    {
-        private int W;
-        private int H;
-        private bool _ShowText = true;
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        public bool ShowText
-        {
-            get { return _ShowText; }
-            set { _ShowText = value; }
-        }
-
-        private Color _BaseColor = Color.FromArgb(60, 70, 73);
-        private Color _TextColor = Helpers.FlatColor;
-
-        public FlatGroupBox()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-            BackColor = Color.Transparent;
-            Size = new Size(240, 180);
-            Font = new Font("Segoe ui", 10);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            GraphicsPath GP = new GraphicsPath();
-            GraphicsPath GP2 = new GraphicsPath();
-            GraphicsPath GP3 = new GraphicsPath();
-            Rectangle Base = new Rectangle(8, 8, W - 16, H - 16);
-
-            var _with7 = G;
-            _with7.SmoothingMode = SmoothingMode.HighQuality;
-            _with7.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with7.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with7.Clear(BackColor);
-
-            //-- Base
-            GP = Helpers.RoundRec(Base, 8);
-            _with7.FillPath(new SolidBrush(_BaseColor), GP);
-
-            //-- Arrows
-            GP2 = Helpers.DrawArrow(28, 2, false);
-            _with7.FillPath(new SolidBrush(_BaseColor), GP2);
-            GP3 = Helpers.DrawArrow(28, 8, true);
-            _with7.FillPath(new SolidBrush(Color.FromArgb(60, 70, 73)), GP3);
-
-            //-- if ShowText
-            if (ShowText)
-            {
-                _with7.DrawString(Text, Font, new SolidBrush(_TextColor), new Rectangle(16, 16, W, H), Helpers.NearSF);
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _TextColor = colors.Flat;
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatLabel : Label
-    {
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
-
-        public FlatLabel()
-        {
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            Font = new Font("Segoe UI", 8);
-            ForeColor = Color.White;
-            BackColor = Color.Transparent;
-            Text = Text;
-        }
-    }
-}
-namespace FlatUI
-{
-    public class FlatListBox : Control
-    {
-        private ListBox withEventsField_ListBx = new ListBox();
-        private ListBox ListBx
-        {
-            get { return withEventsField_ListBx; }
-            set
-            {
-                if (withEventsField_ListBx != null)
+                switch (TitleTextPostion)
                 {
-                    withEventsField_ListBx.DrawItem -= Drawitem;
-                }
-                withEventsField_ListBx = value;
-                if (withEventsField_ListBx != null)
-                {
-                    withEventsField_ListBx.DrawItem += Drawitem;
+                    case TitlePostion.Left:
+                        G.DrawString(Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), 5, 17);
+                        break;
+                    case TitlePostion.Center:
+                        H.CentreString(G, Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), new Rectangle(0, 2, Width, 50));
+                        break;
+                    case TitlePostion.Right:
+                        H.RightString(G, Text.ToUpper(), Font, H.SolidBrushHTMlColor("f3ebf3"), new Rectangle(0, 2, Width, 50));
+                        break;
                 }
             }
-        }
 
-        private string[] _items = { "" };
-
-        [Category("Options")]
-        public string[] items
-        {
-            get { return _items; }
-            set
-            {
-                _items = value;
-                ListBx.Items.Clear();
-                ListBx.Items.AddRange(value);
-                Invalidate();
-            }
-        }
-
-        [Category("Colors")]
-        public Color SelectedColor
-        {
-            get { return _SelectedColor; }
-            set { _SelectedColor = value; }
-        }
-
-        public string SelectedItem
-        {
-            get { return ListBx.SelectedItem.ToString(); }
-        }
-
-        public int SelectedIndex
-        {
-            get
-            {
-                int functionReturnValue = 0;
-                return ListBx.SelectedIndex;
-                if (ListBx.SelectedIndex < 0)
-                    return functionReturnValue;
-                return functionReturnValue;
-            }
-        }
-
-        public void Clear()
-        {
-            ListBx.Items.Clear();
-        }
-
-        public void ClearSelected()
-        {
-            for (int i = (ListBx.SelectedItems.Count - 1); i >= 0; i += -1)
-            {
-                ListBx.Items.Remove(ListBx.SelectedItems[i]);
-            }
-        }
-
-        public void Drawitem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0)
-                return;
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-
-            //-- if selected
-            if (e.State.ToString().IndexOf("Selected,") >= 0)
-            {
-                //-- Base
-                e.Graphics.FillRectangle(new SolidBrush(_SelectedColor), new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-
-                //-- Text
-                e.Graphics.DrawString(" " + ListBx.Items[e.Index].ToString(), new Font("Segoe UI", 8), Brushes.White, e.Bounds.X, e.Bounds.Y + 2);
-            }
-            else
-            {
-                //-- Base
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(51, 53, 55)), new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-
-                //-- Text 
-                e.Graphics.DrawString(" " + ListBx.Items[e.Index].ToString(), new Font("Segoe UI", 8), Brushes.White, e.Bounds.X, e.Bounds.Y + 2);
-            }
-
-            e.Graphics.Dispose();
-        }
-
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            if (!Controls.Contains(ListBx))
-            {
-                Controls.Add(ListBx);
-            }
-        }
-
-        public void AddRange(object[] items)
-        {
-            ListBx.Items.Remove("");
-            ListBx.Items.AddRange(items);
-        }
-
-        public void AddItem(object item)
-        {
-            ListBx.Items.Remove("");
-            ListBx.Items.Add(item);
-        }
-
-        private Color BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _SelectedColor = Helpers.FlatColor;
-
-        public FlatListBox()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-
-            ListBx.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            ListBx.ScrollAlwaysVisible = false;
-            ListBx.HorizontalScrollbar = false;
-            ListBx.BorderStyle = BorderStyle.None;
-            ListBx.BackColor = BaseColor;
-            ListBx.ForeColor = Color.White;
-            ListBx.Location = new Point(3, 3);
-            ListBx.Font = new Font("Segoe UI", 8);
-            ListBx.ItemHeight = 20;
-            ListBx.Items.Clear();
-            ListBx.IntegralHeight = false;
-
-            Size = new Size(131, 101);
-            BackColor = BaseColor;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-
-            Rectangle Base = new Rectangle(0, 0, Width, Height);
-
-            var _with19 = G;
-            _with19.SmoothingMode = SmoothingMode.HighQuality;
-            _with19.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with19.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with19.Clear(BackColor);
-
-            //-- Size
-            ListBx.Size = new Size(Width - 6, Height - 2);
-
-            //-- Base
-            _with19.FillRectangle(new SolidBrush(BaseColor), Base);
-
-            base.OnPaint(e);
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
+    }
 
-        private void UpdateColors()
+    #endregion
+
+    #region Constructors
+
+    public ModalTheme()
+    {
+
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.ContainerControl, true);
+        DoubleBuffered = true;
+        Font = new Font("Ubuntu", 13, FontStyle.Bold);
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region  Properties
+
+    public int BorderThickness
+    {
+        get
         {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _SelectedColor = colors.Flat;
+            return _BorderThickness;
+        }
+        set
+        {
+            _BorderThickness = value;
+            Invalidate();
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatMax : Control
-    {
-        private MouseState State = MouseState.None;
-        private int x;
 
-        protected override void OnMouseEnter(EventArgs e)
+    public bool ShowIcon
+    {
+        get { return _ShowIcon; }
+        set
         {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
+            if (value == _ShowIcon) { return; }
+            FindForm().ShowIcon = value;
+            Invalidate();
+            _ShowIcon = value;
+
+        }
+    }
+
+
+    public TitlePostion TitleTextPostion
+    {
+        get { return _TitleTextPostion; }
+
+        set
+        {
+            _TitleTextPostion = value;
             Invalidate();
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+    }
+
+
+    public enum TitlePostion
+    {
+        Left,
+        Center,
+        Right
+    };
+
+    #endregion
+
+    #region Events
+
+    protected override void OnCreateControl()
+    {
+
+        base.OnCreateControl();
+        ParentForm.FormBorderStyle = FormBorderStyle.None;
+        ParentForm.Dock = DockStyle.None;
+        Dock = DockStyle.Fill;
+        Invalidate();
+
+    }
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+
+        base.OnMouseMove(e);
+        int x = MousePosition.X;
+        int y = MousePosition.Y;
+        int x1 = MousePoint.X;
+        int y1 = MousePoint.Y;
+
+        if (Movable)
+            Parent.Location = new Point(x - x1, y - y1);
+        Focus();
+
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        try
         {
             base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
 
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            x = e.X;
-            Invalidate();
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            switch (FindForm().WindowState)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && new Rectangle(0, 0, Width, MoveHeight).Contains(e.Location))
             {
-                case FormWindowState.Maximized:
-                    FindForm().WindowState = FormWindowState.Normal;
-                    break;
-                case FormWindowState.Normal:
-                    FindForm().WindowState = FormWindowState.Maximized;
-                    break;
-            }
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color TextColor
-        {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Size = new Size(18, 18);
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatMax()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.White;
-            Size = new Size(18, 18);
-            Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Font = new Font("Marlett", 12);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-
-            Rectangle Base = new Rectangle(0, 0, Width, Height);
-
-            var _with4 = G;
-            _with4.SmoothingMode = SmoothingMode.HighQuality;
-            _with4.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with4.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with4.Clear(BackColor);
-
-            //-- Base
-            _with4.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-            //-- Maximize
-            if (FindForm().WindowState == FormWindowState.Maximized)
-            {
-                _with4.DrawString("1", Font, new SolidBrush(TextColor), new Rectangle(1, 1, Width, Height), Helpers.CenterSF);
-            }
-            else if (FindForm().WindowState == FormWindowState.Normal)
-            {
-                _with4.DrawString("2", Font, new SolidBrush(TextColor), new Rectangle(1, 1, Width, Height), Helpers.CenterSF);
+                Movable = true;
+                MousePoint = e.Location;
             }
 
-            //-- Hover/down
+        }
+        catch
+        {
+
+        }
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+
+        base.OnMouseUp(e);
+
+        Movable = false;
+
+
+    }
+
+    #endregion
+
+
+}
+
+#endregion
+
+#region Flat Button
+
+public class ModalFlatButton : Control
+{
+
+    #region Variables
+
+    private HelperMethods.MouseMode State;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+            G.SmoothingMode = SmoothingMode.AntiAlias;
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            Rectangle R = new Rectangle(0, 0, Width - 1, Height - 1);
+
             switch (State)
             {
-                case MouseState.Over:
-                    _with4.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.White)), Base);
+                case HelperMethods.MouseMode.NormalMode:
+
+                    H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), R, 2);
+                    H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, R, 2);
+
                     break;
-                case MouseState.Down:
-                    _with4.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.Black)), Base);
+                case HelperMethods.MouseMode.Hovered:
+                    Cursor = Cursors.Hand;
+
+                    H.FillRoundedPath(G, H.SolidBrushHTMlColor("231625"), R, 2);
+                    H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, R, 2);
+
+                    break;
+                case HelperMethods.MouseMode.Pushed:
+
+                    H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), R, 2);
+                    H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, R, 2);
+
                     break;
             }
 
-            base.OnPaint(e);
+            H.CentreString(G, Text, Font, H.SolidBrushHTMlColor("e5d2e6"), new Rectangle(0, 0, Width - 2, Height - 4));
+
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatMini : Control
+
+    #endregion
+
+    #region Constructors
+
+    public ModalFlatButton()
     {
-        private MouseState State = MouseState.None;
-        private int x;
+        SetStyle(ControlStyles.DoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+        ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 14, FontStyle.Regular, GraphicsUnit.Pixel);
+        UpdateStyles();
 
-        protected override void OnMouseEnter(EventArgs e)
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+
+        base.OnMouseEnter(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+
+        base.OnMouseUp(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+
+        base.OnMouseDown(e);
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Button
+
+public class ModalButton : Control
+{
+
+    #region Variables
+
+    private HelperMethods.MouseMode State;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
+            G.SmoothingMode = SmoothingMode.AntiAlias;
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
+            Rectangle R = new Rectangle(0, 0, Width - 1, Height - 1);
 
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            x = e.X;
-            Invalidate();
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            switch (FindForm().WindowState)
-            {
-                case FormWindowState.Normal:
-                    FindForm().WindowState = FormWindowState.Minimized;
-                    break;
-                case FormWindowState.Maximized:
-                    FindForm().WindowState = FormWindowState.Minimized;
-                    break;
-            }
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color TextColor
-        {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Size = new Size(18, 18);
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatMini()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.White;
-            Size = new Size(18, 18);
-            Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Font = new Font("Marlett", 12);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-
-            Rectangle Base = new Rectangle(0, 0, Width, Height);
-
-            var _with5 = G;
-            _with5.SmoothingMode = SmoothingMode.HighQuality;
-            _with5.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with5.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with5.Clear(BackColor);
-
-            //-- Base
-            _with5.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-            //-- Minimize
-            _with5.DrawString("0", Font, new SolidBrush(TextColor), new Rectangle(2, 1, Width, Height), Helpers.CenterSF);
-
-            //-- Hover/down
             switch (State)
             {
-                case MouseState.Over:
-                    _with5.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.White)), Base);
+                case HelperMethods.MouseMode.NormalMode:
+
+                    using (LinearGradientBrush LB = new LinearGradientBrush(R, Color.FromArgb(200, H.GetHTMLColor("431448")), Color.FromArgb(200, H.GetHTMLColor("5b2960")), 270f))
+                    {
+                        H.FillRoundedPath(G, LB, R, 2);
+                        using (LinearGradientBrush LB2 = new LinearGradientBrush(R, Color.FromArgb(230, H.GetHTMLColor("431448")), Color.FromArgb(230, H.GetHTMLColor("5b2960")), 270f))
+                        {
+                            H.FillRoundedPath(G, LB2, R, 2);
+                        }
+                        H.DrawRoundedPath(G, H.GetHTMLColor("311833"), 1, R, 2);
+                    }
+
                     break;
-                case MouseState.Down:
-                    _with5.FillRectangle(new SolidBrush(Color.FromArgb(30, Color.Black)), Base);
+
+                case HelperMethods.MouseMode.Hovered:
+                    Cursor = Cursors.Hand;
+                    using (LinearGradientBrush LB = new LinearGradientBrush(R, Color.FromArgb(200, H.GetHTMLColor("241525")), Color.FromArgb(200, H.GetHTMLColor("241525")), 270f))
+                    {
+                        H.FillRoundedPath(G, LB, R, 2);
+                        using (LinearGradientBrush LB2 = new LinearGradientBrush(R, Color.FromArgb(230, H.GetHTMLColor("431448")), Color.FromArgb(230, H.GetHTMLColor("5b2960")), 270f))
+                        {
+                            H.FillRoundedPath(G, LB2, R, 2);
+                        }
+                        H.DrawRoundedPath(G, H.GetHTMLColor("311833"), 1, R, 2);
+                    }
+
+                    break;
+                case HelperMethods.MouseMode.Pushed:
+                    using (LinearGradientBrush LB = new LinearGradientBrush(R, Color.FromArgb(200, H.GetHTMLColor("431448")), Color.FromArgb(200, H.GetHTMLColor("5b2960")), 270f))
+                    {
+                        H.FillRoundedPath(G, LB, R, 2);
+                        using (LinearGradientBrush LB2 = new LinearGradientBrush(R, Color.FromArgb(230, H.GetHTMLColor("431448")), Color.FromArgb(230, H.GetHTMLColor("5b2960")), 270f))
+                        {
+                            H.FillRoundedPath(G, LB2, R, 2);
+                        }
+                        H.DrawRoundedPath(G, H.GetHTMLColor("311833"), 1, R, 2);
+                    }
+
                     break;
             }
 
-            base.OnPaint(e);
+            H.CentreString(G, Text, Font, H.SolidBrushHTMlColor("e5d2e6"), new Rectangle(0, 0, Width - 2, Height - 4));
+
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatNumeric : Control
+
+    #endregion
+
+    #region Constructors
+
+    public ModalButton()
     {
-        private int W;
-        private int H;
-        private MouseState State = MouseState.None;
-        private int x;
-        private int y;
-        private long _Value;
-        private long _Min;
-        private long _Max;
-        private bool Bool;
+        SetStyle(ControlStyles.DoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+        ControlStyles.Selectable | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 14, FontStyle.Regular, GraphicsUnit.Pixel);
+        UpdateStyles();
 
-        public long Value
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+
+        base.OnMouseEnter(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+
+        base.OnMouseUp(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+
+        base.OnMouseDown(e);
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Textbox
+
+[DefaultEvent("TextChanged")]
+public class ModalTextbox : Control
+{
+
+    #region Variables
+
+    private TextBox T = new TextBox();
+    private HorizontalAlignment _TextAlign = HorizontalAlignment.Left;
+    private int _MaxLength = 32767;
+    private bool _ReadOnly;
+    private bool _UseSystemPasswordChar = false;
+    private string _WatermarkText = "";
+    private Image _SideImage;
+    private bool _Multiline = false;
+    protected HelperMethods.MouseMode State = HelperMethods.MouseMode.NormalMode;
+    private static HelperMethods H = new HelperMethods();
+    private static Color TBC = H.GetHTMLColor("291a2a");
+    private static Color TFC = H.GetHTMLColor("a89ea9");
+    private SideAligin _SideImageAlign = SideAligin.Left;
+    private Color _BackColor = TBC;
+    #endregion
+
+    #region  Native Methods
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
+string lParam);
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            get { return _Value; }
-            set
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
+            Height = 30;
+
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Rect);
+
+            G.DrawLine(H.PenHTMlColor("231625", 1), new Point(0, Height - 1), new Point(Width - 2, Height - 1));
+
+
+
+            if (SideImage != null)
             {
-                if (value <= _Max & value >= _Min)
-                    _Value = value;
-                Invalidate();
-            }
-        }
-
-        public long Maximum
-        {
-            get { return _Max; }
-            set
-            {
-                if (value > _Min)
-                    _Max = value;
-                if (_Value > _Max)
-                    _Value = _Max;
-                Invalidate();
-            }
-        }
-
-        public long Minimum
-        {
-            get { return _Min; }
-            set
-            {
-                if (value < _Max)
-                    _Min = value;
-                if (_Value < _Min)
-                    _Value = Minimum;
-                Invalidate();
-            }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            x = e.Location.X;
-            y = e.Location.Y;
-            Invalidate();
-            if (e.X < Width - 23)
-                Cursor = Cursors.IBeam;
-            else
-                Cursor = Cursors.Hand;
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            if (x > Width - 21 && x < Width - 3)
-            {
-                if (y < 15)
+                if (SideImageAlign == SideAligin.Right)
                 {
-                    if ((Value + 1) <= _Max)
-                        _Value += 1;
+                    T.Location = new Point(7, 5);
+                    T.Width = Width - 60;
+                    G.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    G.DrawImage(SideImage, new Rectangle(Rect.Width - 24, 6, 16, 16));
                 }
                 else
                 {
-                    if ((Value - 1) >= _Min)
-                        _Value -= 1;
+                    T.Location = new Point(33, 5);
+                    T.Width = Width - 60;
+                    G.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    G.DrawImage(SideImage, new Rectangle(8, 6, 16, 16));
+                }
+
+
+            }
+            else
+            {
+                T.Location = new Point(7, 5);
+                T.Width = Width - 10;
+            }
+
+            if (ContextMenuStrip != null) { T.ContextMenuStrip = ContextMenuStrip; }
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalTextbox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        UpdateStyles();
+        Font = new Font("Arial", 11, FontStyle.Regular);
+        Size = new Size(135, 30);
+        T.Multiline = _Multiline;
+        T.Cursor = Cursors.IBeam;
+        T.BackColor = TBC;
+        T.ForeColor = TFC;
+        T.BorderStyle = BorderStyle.None;
+        T.Location = new Point(7, 7);
+        T.Font = Font;
+        T.Size = new Size(Width - 10, 30);
+        T.UseSystemPasswordChar = _UseSystemPasswordChar;
+        T.TextChanged += T_TextChanged;
+        T.MouseDown += T_MouseDown;
+        T.MouseEnter += T_MouseEnter;
+        T.MouseUp += T_MouseUp;
+        T.MouseLeave += T_MouseLeave;
+        T.MouseHover += T_MouseHover;
+        T.KeyDown += T_KeyDown;
+    }
+
+    #endregion
+
+    #region Properties
+
+    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public BorderStyle BorderStyle
+    {
+        get
+        {
+            return BorderStyle.None;
+        }
+    }
+
+    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool Multiline
+    {
+        get
+        {
+            return _Multiline;
+        }
+        set
+        {
+            _Multiline = value;
+            if (T != null)
+            {
+                T.Multiline = value;
+            }
+
+        }
+    }
+
+    public HorizontalAlignment TextAlign
+    {
+        get
+        {
+            return _TextAlign;
+        }
+        set
+        {
+            _TextAlign = value;
+            if (T != null)
+            {
+                T.TextAlign = value;
+            }
+        }
+    }
+
+    public int MaxLength
+    {
+        get
+        {
+            return _MaxLength;
+        }
+        set
+        {
+            _MaxLength = value;
+            if (T != null)
+            {
+                T.MaxLength = value;
+            }
+        }
+    }
+
+    public bool ReadOnly
+    {
+        get
+        {
+            return _ReadOnly;
+        }
+        set
+        {
+            _ReadOnly = value;
+            if (T != null)
+            {
+                T.ReadOnly = value;
+            }
+        }
+    }
+
+    public bool UseSystemPasswordChar
+    {
+        get
+        {
+            return _UseSystemPasswordChar;
+        }
+        set
+        {
+            _UseSystemPasswordChar = value;
+            if (T != null)
+            {
+                T.UseSystemPasswordChar = value;
+            }
+        }
+    }
+
+    public string WatermarkText
+    {
+        get
+        {
+            return _WatermarkText;
+        }
+        set
+        {
+            _WatermarkText = value;
+            SendMessage(T.Handle, 0x1501, 0, value);
+            Invalidate();
+        }
+    }
+
+    public Image SideImage
+    {
+        get
+        {
+            return _SideImage;
+        }
+        set
+        {
+            _SideImage = value;
+            Invalidate();
+        }
+    }
+
+    [Browsable(false)]
+    public override Image BackgroundImage
+    {
+        get
+        {
+            return base.BackgroundImage;
+        }
+        set
+        {
+            base.BackgroundImage = value;
+        }
+    }
+
+    [Browsable(false)]
+    public override ImageLayout BackgroundImageLayout
+    {
+        get
+        {
+            return base.BackgroundImageLayout;
+        }
+        set
+        {
+            base.BackgroundImageLayout = value;
+        }
+    }
+
+    public override string Text
+    {
+        get
+        {
+            return base.Text;
+        }
+        set
+        {
+            base.Text = value;
+        }
+    }
+
+    public enum SideAligin
+    {
+        Left,
+        Right
+    }
+
+    public SideAligin SideImageAlign
+    {
+        get
+        {
+            return _SideImageAlign;
+        }
+        set
+        {
+            _SideImageAlign = value;
+            Invalidate();
+        }
+    }
+
+    override public Color BackColor
+    {
+
+        get { return _BackColor; }
+        set
+        {
+            base.BackColor = value;
+            _BackColor = value;
+            T.BackColor = value;
+            Invalidate();
+        }
+    }
+
+
+    #endregion
+
+    #region Events
+
+    private void T_MouseHover(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    private void T_MouseLeave(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    private void T_MouseUp(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_MouseEnter(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_MouseDown(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_TextChanged(object sender, EventArgs e)
+    {
+        Text = T.Text;
+    }
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+        T.Text = Text;
+    }
+
+    private void T_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Control && e.KeyCode == Keys.A) { e.SuppressKeyPress = true; }
+        if (e.Control && e.KeyCode == Keys.C)
+        {
+            T.Copy();
+            e.SuppressKeyPress = true;
+        }
+    }
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        if (!Controls.Contains(T))
+            Controls.Add(T);
+        if (T.Text == "" && WatermarkText != "")
+
+            T.Text = WatermarkText;
+
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        if (_Multiline == false)
+            Height = 30;
+    }
+
+    #endregion
+
+
+}
+
+#endregion
+
+#region ComboBox
+
+public class ModalComboBox : ComboBox
+{
+
+    #region Variables
+
+    private int _StartIndex = 0;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalComboBox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+              ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+        DoubleBuffered = true;
+        StartIndex = 0;
+        DropDownHeight = 100;
+        BackColor = H.GetHTMLColor("291a2a");
+        Font = new Font("Ubuntu", 12, FontStyle.Regular);
+        DropDownStyle = ComboBoxStyle.DropDownList;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Properties
+
+    public int StartIndex
+    {
+        get
+        {
+            return _StartIndex;
+        }
+        set
+        {
+            _StartIndex = value;
+            try
+            {
+                base.SelectedIndex = value;
+            }
+            catch
+            {
+
+            }
+            Invalidate();
+        }
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Rect);
+
+            G.DrawLine(H.PenHTMlColor("231625", 2), new Point(Width - 21, (Height / 2) - 3), new Point(Width - 7, (Height / 2) - 3));
+
+            G.DrawLine(H.PenHTMlColor("231625", 2), new Point(Width - 21, (Height / 2) + 1), new Point(Width - 7, (Height / 2) + 1));
+
+            G.DrawLine(H.PenHTMlColor("231625", 2), new Point(Width - 21, (Height / 2) + 5), new Point(Width - 7, (Height / 2) + 5));
+
+            G.DrawLine(H.PenHTMlColor("231625", 1), new Point(1, Height - 1), new Point(Width - 2, Height - 1));
+
+            G.DrawString(Text, Font, new SolidBrush(H.GetHTMLColor("a89ea9")), new Rectangle(5, 1, Width - 1, Height - 1), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Near });
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    protected override void OnDrawItem(DrawItemEventArgs e)
+    {
+        try
+        {
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            if (System.Convert.ToInt32((e.State & DrawItemState.Selected)) == (int)DrawItemState.Selected)
+            {
+                if (!(e.Index == -1))
+                {
+                    Cursor = Cursors.Hand;
+                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(120, H.GetHTMLColor("291a2a"))), new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 2, e.Bounds.Width - 2, e.Bounds.Height - 2));
+                    e.Graphics.DrawString(GetItemText(Items[e.Index]), new Font("Ubuntu", 10, FontStyle.Bold), H.SolidBrushHTMlColor("a89ea9"), new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 3, e.Bounds.Width - 2, e.Bounds.Height - 2));
                 }
             }
             else
             {
-                Bool = !Bool;
-                Focus();
+                if (!(e.Index == -1))
+                {
+                    e.Graphics.FillRectangle(H.SolidBrushHTMlColor("291a2a"), new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 2, e.Bounds.Width - 2, e.Bounds.Height - 2));
+                    e.Graphics.DrawString(GetItemText(Items[e.Index]), new Font("Ubuntu", 10, FontStyle.Regular), Brushes.Gainsboro, new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 3, e.Bounds.Width - 2, e.Bounds.Height - 2));
+                }
+            }
+
+        }
+        catch
+        {
+
+        }
+        Invalidate();
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Invalidate();
+    }
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+
+    }
+
+    protected override void OnLostFocus(EventArgs e)
+    {
+        base.OnLostFocus(e);
+        SuspendLayout();
+        Update();
+        ResumeLayout();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region CheckBox
+
+[DefaultEvent("CheckedChanged")]
+public class ModalCheckBox : Control
+{
+
+    #region Variables
+
+    protected bool _Checked;
+    protected HelperMethods.MouseMode State = HelperMethods.MouseMode.NormalMode;
+    public event CheckedChangedEventHandler CheckedChanged;
+    public delegate void CheckedChangedEventHandler(object sender);
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Properties
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+        Invalidate();
+    }
+
+    public bool Checked
+    {
+        get
+        {
+            return _Checked;
+        }
+        set
+        {
+            _Checked = value;
+            Invalidate();
+        }
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+
+            Rectangle R = new Rectangle(1, 1, 18, 18);
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), R);
+            G.DrawRectangle(H.PenHTMlColor("231625", (int)1.5), R);
+
+            if (Checked)
+            {
+                G.DrawString("b", new Font("Marlett", 16, FontStyle.Regular), H.SolidBrushHTMlColor("5b2960"), new Rectangle(Convert.ToInt32(-2.7), 0, Width - 4, Height));
+            }
+
+            G.DrawString(Text, Font, H.SolidBrushHTMlColor("e4ecf2"), new Rectangle(22, Convert.ToInt32(1.6), Width, Height - 2), new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalCheckBox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 11, FontStyle.Regular);
+        Cursor = Cursors.Hand;
+        UpdateStyles();
+    }
+
+    #endregion
+
+    #region  Events
+
+    protected override void OnMouseHover(EventArgs e)
+    {
+        base.OnMouseHover(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Height = 20;
+        Invalidate();
+    }
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+    }
+
+    protected override void OnClick(EventArgs e)
+    {
+        _Checked = !_Checked;
+        if (CheckedChanged != null)
+        {
+            CheckedChanged(this);
+        }
+        base.OnClick(e);
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region RadioButton
+
+[DefaultEvent("CheckedChanged")]
+public class ModalRadioButton : Control
+{
+
+    #region Variables
+
+    protected bool _Checked;
+    protected HelperMethods.MouseMode State = HelperMethods.MouseMode.NormalMode;
+    protected static int _Group = 1;
+    public event CheckedChangedEventHandler CheckedChanged;
+    public delegate void CheckedChangedEventHandler(object sender);
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Properties
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+        Invalidate();
+    }
+
+    public bool Checked
+    {
+        get
+        {
+            return _Checked;
+        }
+        set
+        {
+            _Checked = value;
+            UpdateCheckState();
+            Invalidate();
+        }
+    }
+
+    public int Group
+    {
+        get
+        {
+            return _Group;
+        }
+        set
+        {
+            _Group = value;
+        }
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+            G.SmoothingMode = SmoothingMode.AntiAlias;
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+            G.FillEllipse(H.SolidBrushHTMlColor("291a2a"), new Rectangle(1, 1, 18, 18));
+            G.DrawEllipse(H.PenHTMlColor("231625", (int)2.8), new Rectangle(1, 1, 18, 18));
+
+            if (Checked)
+            {
+                G.DrawString("-", Font, H.SolidBrushHTMlColor("5b2960"), new Rectangle(5, Convert.ToInt32(0.8), Width - 4, Height));
+            }
+            else
+            {
+                G.DrawString("+", Font, H.SolidBrushHTMlColor("5b2960"), new Rectangle((int)4.5, 3, Width - 4, Height));
+            }
+
+            G.DrawString(Text, Font, H.SolidBrushHTMlColor("a89ea9"), new Rectangle(22, Convert.ToInt32(1.6), Width, Height - 2), new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalRadioButton()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        Cursor = Cursors.Hand;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 11, FontStyle.Regular);
+        UpdateStyles();
+    }
+
+    #endregion
+
+    #region  Events
+
+    private void UpdateCheckState()
+    {
+        if (!IsHandleCreated || !_Checked)
+            return;
+
+        foreach (Control C in Parent.Controls)
+        {
+            if (!object.ReferenceEquals(C, this) && C is ModalRadioButton && ((ModalRadioButton)C).Group == _Group)
+            {
+                ((ModalRadioButton)C).Checked = false;
+            }
+        }
+        if (CheckedChanged != null)
+        {
+            CheckedChanged(this);
+        }
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        if (!_Checked)
+            Checked = true;
+        base.OnMouseDown(e);
+    }
+
+    protected override void OnMouseHover(EventArgs e)
+    {
+        base.OnMouseHover(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Height = 21;
+        Invalidate();
+    }
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        UpdateCheckState();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Label
+
+[DefaultEvent("TextChanged")]
+public class ModalLabel : Control
+{
+    #region Variables
+
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalLabel()
+    {
+        SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 12, FontStyle.Regular);
+        UpdateStyles();
+    }
+
+    #endregion
+
+    #region DrawControl
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+        e.Graphics.DrawString(Text, Font, H.SolidBrushHTMlColor("a89ea9"), ClientRectangle);
+
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Height = Font.Height;
+    }
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+    }
+
+    #endregion;
+
+}
+
+#endregion
+
+#region Link Label
+
+[DefaultEvent("TextChanged")]
+public class ModalLinkLabel : Control
+{
+
+    #region Variables
+
+    private HelperMethods.MouseMode State;
+    private static HelperMethods H = new HelperMethods();
+    private string _URL = string.Empty;
+    private Color _HoverColor = H.GetHTMLColor("311833");
+    private Color _PushedColor = H.GetHTMLColor("431448");
+
+    #endregion
+
+    #region Properties
+
+    public string URL
+    {
+        get
+        {
+            return _URL;
+        }
+        set
+        {
+            _URL = value;
+            Invalidate();
+        }
+    }
+
+    public Color HoverColor
+    {
+        get
+        {
+            return _HoverColor;
+        }
+        set
+        {
+            _HoverColor = value;
+            Invalidate();
+        }
+    }
+
+    public Color PushedColor
+    {
+        get
+        {
+            return _PushedColor;
+        }
+        set
+        {
+            _PushedColor = value;
+            Invalidate();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalLinkLabel()
+    {
+        SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 12, FontStyle.Underline);
+        UpdateStyles();
+    }
+
+    #endregion
+
+    #region DrawControl
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+        switch (State)
+        {
+            case HelperMethods.MouseMode.NormalMode:
+                e.Graphics.DrawString(Text, Font, H.SolidBrushHTMlColor("a89ea9"), ClientRectangle);
+                break;
+            case HelperMethods.MouseMode.Hovered:
+                Cursor = Cursors.Hand;
+                e.Graphics.DrawString(Text, Font, new SolidBrush(HoverColor), ClientRectangle);
+                break;
+            case HelperMethods.MouseMode.Pushed:
+                e.Graphics.DrawString(Text, Font, new SolidBrush(PushedColor), ClientRectangle);
+                break;
+        }
+
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Height = Font.Height + 2;
+    }
+
+    protected override void OnClick(EventArgs e)
+    {
+        base.OnClick(e);
+        if (URL != null)
+        {
+            if (!URL.StartsWith("http://www."))
+            {
+                if (URL == "http://www.")
+                {
+                    MessageBox.Show("You must put the link to go");
+                }
+                else
+                {
+                    URL = "http://www." + URL;
+                    System.Diagnostics.Process.Start(URL);
+                }
+            }
+        }
+    }
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+    }
+
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+
+        base.OnMouseEnter(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+
+        base.OnMouseUp(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+
+        base.OnMouseDown(e);
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    #endregion;
+
+}
+
+#endregion
+
+#region Seperator
+
+public class ModalSeperator : Control
+{
+
+    #region Variables
+
+    private Style _SepStyle = Style.Horizental;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalSeperator()
+    {
+        SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint |
+        ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+        ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Enumerators
+
+    public enum Style
+    {
+        Horizental,
+        Vertiacal
+    };
+
+    #endregion
+
+    #region Properties
+
+    public Style SepStyle
+    {
+        get
+        {
+            return _SepStyle;
+        }
+        set
+        {
+            _SepStyle = value;
+            if (value == Style.Horizental)
+            {
+                Height = 4;
+            }
+            else
+            {
+                Width = 4;
             }
             Invalidate();
         }
+    }
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
+    #endregion
+
+    #region DrawControl
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            base.OnKeyPress(e);
-            try
+
+            G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+            switch (SepStyle)
             {
-                if (Bool)
-                    _Value = Convert.ToInt64(_Value.ToString() + e.KeyChar.ToString());
-                if (_Value > _Max)
-                    _Value = _Max;
-                Invalidate();
+                case Style.Horizental:
+                    using (System.Drawing.Drawing2D.LinearGradientBrush lb1 = new System.Drawing.Drawing2D.LinearGradientBrush(ClientRectangle, Color.Empty, Color.Empty, 0.0F))
+                    {
+                        G.DrawLine(H.PenHTMlColor("231625", 1), 0, 1, Width, 1);
+                    }
+                    break;
+                case Style.Vertiacal:
+                    using (System.Drawing.Drawing2D.LinearGradientBrush lb1 = new System.Drawing.Drawing2D.LinearGradientBrush(ClientRectangle, Color.Empty, Color.Empty, 90.0F))
+                    {
+                        G.DrawLine(H.PenHTMlColor("231625", 1), 1, 0, 1, Height);
+                    }
+                    break;
             }
-            catch
-            {
-            }
-        }
 
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Back)
-            {
-                Value = 0;
-            }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 30;
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color ButtonColor
-        {
-            get { return _ButtonColor; }
-            set { _ButtonColor = value; }
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _ButtonColor = Helpers.FlatColor;
-
-        public FlatNumeric()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-            Font = new Font("Segoe UI", 10);
-            BackColor = Color.FromArgb(60, 70, 73);
-            ForeColor = Color.White;
-            _Min = 0;
-            _Max = 9999999;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width;
-            H = Height;
-
-            Rectangle Base = new Rectangle(0, 0, W, H);
-
-            var _with18 = G;
-            _with18.SmoothingMode = SmoothingMode.HighQuality;
-            _with18.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with18.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with18.Clear(BackColor);
-
-            //-- Base
-            _with18.FillRectangle(new SolidBrush(_BaseColor), Base);
-            _with18.FillRectangle(new SolidBrush(_ButtonColor), new Rectangle(Width - 24, 0, 24, H));
-
-            //-- Add
-            _with18.DrawString("+", new Font("Segoe UI", 12), Brushes.White, new Point(Width - 12, 8), Helpers.CenterSF);
-            //-- Subtract
-            _with18.DrawString("-", new Font("Segoe UI", 10, FontStyle.Bold), Brushes.White, new Point(Width - 12, 22), Helpers.CenterSF);
-
-            //-- Text
-            _with18.DrawString(Value.ToString(), Font, Brushes.White, new Rectangle(5, 1, W, H), new StringFormat { LineAlignment = StringAlignment.Center });
-
-            base.OnPaint(e);
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
 
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
+    }
 
-            _ButtonColor = colors.Flat;
+    #endregion
+
+    #region Events
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        if (SepStyle == Style.Horizental) { Height = 4; } else { Width = 4; }
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Panel
+
+public class ModalPanel : ContainerControl
+{
+
+    #region Variables
+
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalPanel()
+    {
+
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw |
+            ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+            H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), Rect, 2);
+
+            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, Rect, 2);
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatProgressBar : Control
+
+    #endregion
+
+    #region Events
+
+    protected override void OnResize(EventArgs e)
     {
-        private int W;
-        private int H;
-        private int _Value = 0;
-        private int _Maximum = 100;
-        private bool _Pattern = true;
-        private bool _ShowBalloon = true;
-        private bool _PercentSign = false;
+        base.OnResize(e);
+        Invalidate();
+    }
 
-        [Category("Control")]
-        public int Maximum
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region GroupBox
+
+public class ModalGroupBox : ContainerControl
+{
+
+    #region Variables
+
+    private static HelperMethods H = new HelperMethods();
+    private Style _GroupBoxStyle = Style.I;
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            get { return _Maximum; }
-            set
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            if (GroupBoxStyle == Style.I)
             {
-                if (value < _Value)
-                    _Value = value;
-                _Maximum = value;
-                Invalidate();
-            }
-        }
+                H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), Rect, 2);
+                H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, Rect, 2);
 
-        [Category("Control")]
-        public int Value
+                G.DrawString(Text, Font, H.SolidBrushHTMlColor("a89ea9"), new Point(5, 6), StringFormat.GenericTypographic);
+                G.DrawLine(H.PenHTMlColor("231625", 1), new Point(3, 32), new Point(130, 32));
+            }
+            else
+            {
+                H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), new Rectangle(0, 0, Width - 1, 32), 2);
+                H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, Rect, 2);
+
+                G.DrawString(Text, Font, H.SolidBrushHTMlColor("a89ea9"), new Point(5, 6), StringFormat.GenericTypographic);
+                G.DrawLine(H.PenHTMlColor("231625", 1), new Point(1, 32), new Point(Width - 1, 32));
+            }
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalGroupBox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.ContainerControl, true);
+        DoubleBuffered = true;
+        Font = new Font("Ubuntu", 11, FontStyle.Regular);
+        BackColor = Color.Transparent;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Properties
+
+    public Style GroupBoxStyle
+    {
+        get
         {
-            get
+            return _GroupBoxStyle;
+        }
+        set
+        {
+            _GroupBoxStyle = value;
+            Invalidate();
+        }
+    }
+
+    #endregion
+
+    #region Enumerators
+
+    public enum Style
+    {
+        I,
+        O
+    };
+
+    #endregion
+
+}
+
+#endregion
+
+#region Progress
+
+public class ModalProgressBar : Control
+{
+
+    #region Variables
+
+    private int _Maximum = 100;
+    private int _Value;
+    protected int CurrentValue;
+    private static HelperMethods H = new HelperMethods();
+
+
+    #endregion
+
+    #region Properties
+
+    public int Value
+    {
+        get
+        {
+            if (_Value < 0)
+            {
+                return 0;
+            }
+            else
             {
                 return _Value;
-                /*
-                switch (_Value)
-                {
-                    case 0:
-                        return 0;
-                        Invalidate();
-                        break;
-                    default:
-                        return _Value;
-                        Invalidate();
-                        break;
-                }
-                */
             }
-            set
+        }
+        set
+        {
+            if (value > Maximum)
             {
-                if (value > _Maximum)
-                {
-                    value = _Maximum;
-                    Invalidate();
-                }
+                _Value = Maximum;
+            }
+            _Value = value;
+            RenewCurrentValue();
+            Invalidate();
+            if (ValueChanged != null)
+                ValueChanged(this);
+            Invalidate();
 
+        }
+    }
+
+    public int Maximum
+    {
+        get
+        {
+            return _Maximum;
+
+        }
+        set
+        {
+            if (_Maximum < value)
+            {
                 _Value = value;
+            }
+            _Maximum = value;
+            Invalidate();
+        }
+    }
+
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+            Rectangle Rect = new Rectangle(0, 0, Width, Height);
+
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Rect);
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), new Rectangle(0, 0, Width - 1, Height - 1));
+
+            if (CurrentValue != 0)
+            {
+                G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Rect.X + 1, Rect.Y + 1, CurrentValue - 2, Rect.Height - 2));
+
+            }
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalProgressBar()
+    {
+
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw |
+                       ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        UpdateStyles();
+        CurrentValue = Convert.ToInt32(_Value / _Maximum * Width);
+    }
+
+    #endregion
+
+    #region Events
+
+    public event ValueChangedEventHandler ValueChanged;
+    public delegate void ValueChangedEventHandler(object sender);
+    public void RenewCurrentValue()
+    {
+        CurrentValue = (int)Math.Round((double)(Value) / (double)(Maximum) * (double)(Width));
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Trackbar
+
+[DefaultEvent("Scroll")]
+public class ModalTrackBar : Control
+{
+
+    #region Variables
+
+    private int _Maximum = 100;
+    private int _Minimum;
+    private int _Value;
+    private int CurrentValue;
+    bool Variable;
+    Rectangle Track, TrackSide;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Properties
+
+    public int Minimum
+    {
+        get
+        {
+            return _Minimum;
+
+        }
+
+        set
+        {
+            if (!(value < 0))
+            {
+                _Minimum = value;
+                RenewCurrentValue();
+                MoveTrack();
                 Invalidate();
             }
-        }
 
-        public bool Pattern
-        {
-            get { return _Pattern; }
-            set { _Pattern = value; }
-        }
-
-        public bool ShowBalloon
-        {
-            get { return _ShowBalloon; }
-            set { _ShowBalloon = value; }
-        }
-
-        public bool PercentSign
-        {
-            get { return _PercentSign; }
-            set { _PercentSign = value; }
-        }
-
-        [Category("Colors")]
-        public Color ProgressColor
-        {
-            get { return _ProgressColor; }
-            set { _ProgressColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color DarkerProgress
-        {
-            get { return _DarkerProgress; }
-            set { _DarkerProgress = value; }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 42;
-        }
-
-        protected override void CreateHandle()
-        {
-            base.CreateHandle();
-            Height = 42;
-        }
-
-        public void Increment(int Amount)
-        {
-            Value += Amount;
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _ProgressColor = Helpers.FlatColor;
-        private Color _DarkerProgress = Color.FromArgb(23, 148, 92);
-
-        public FlatProgressBar()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.FromArgb(60, 70, 73);
-            Height = 42;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            Rectangle Base = new Rectangle(0, 24, W, H);
-            GraphicsPath GP = new GraphicsPath();
-            GraphicsPath GP2 = new GraphicsPath();
-            GraphicsPath GP3 = new GraphicsPath();
-
-            var _with15 = G;
-            _with15.SmoothingMode = SmoothingMode.HighQuality;
-            _with15.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with15.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with15.Clear(BackColor);
-
-            //-- Progress Value
-            //int iValue = Convert.ToInt32(((float)_Value) / ((float)(_Maximum * Width)));
-            float percent = ((float)_Value) / ((float)_Maximum);
-            int iValue = (int)(percent * ((float)Width));
-
-            switch (Value)
-            {
-                case 0:
-                    //-- Base
-                    _with15.FillRectangle(new SolidBrush(_BaseColor), Base);
-                    //--Progress
-                    _with15.FillRectangle(new SolidBrush(_ProgressColor), new Rectangle(0, 24, iValue - 1, H - 1));
-                    break;
-                case 100:
-                    //-- Base
-                    _with15.FillRectangle(new SolidBrush(_BaseColor), Base);
-                    //--Progress
-                    _with15.FillRectangle(new SolidBrush(_ProgressColor), new Rectangle(0, 24, iValue - 1, H - 1));
-                    break;
-                default:
-                    //-- Base
-                    _with15.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-                    //--Progress
-                    GP.AddRectangle(new Rectangle(0, 24, iValue - 1, H - 1));
-                    _with15.FillPath(new SolidBrush(_ProgressColor), GP);
-
-                    if (_Pattern)
-                    {
-                        //-- Hatch Brush
-                        HatchBrush HB = new HatchBrush(HatchStyle.Plaid, _DarkerProgress, _ProgressColor);
-                        _with15.FillRectangle(HB, new Rectangle(0, 24, iValue - 1, H - 1));
-                    }
-
-                    if (_ShowBalloon)
-                    {
-                        //-- Balloon
-                        Rectangle Balloon = new Rectangle(iValue - 18, 0, 34, 16);
-                        GP2 = Helpers.RoundRec(Balloon, 4);
-                        _with15.FillPath(new SolidBrush(_BaseColor), GP2);
-
-                        //-- Arrow
-                        GP3 = Helpers.DrawArrow(iValue - 9, 16, true);
-                        _with15.FillPath(new SolidBrush(_BaseColor), GP3);
-
-                        //-- Value > You can add "%" > value & "%"
-                        string text = (_PercentSign ? Value.ToString() + "%" : Value.ToString());
-                        int wOffset = (_PercentSign ? iValue - 15 : iValue - 11);
-                        _with15.DrawString(text, new Font("Segoe UI", 10), new SolidBrush(_ProgressColor), new Rectangle(wOffset, -2, W, H), Helpers.NearSF);
-                    }
-
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _ProgressColor = colors.Flat;
         }
     }
-}
-namespace FlatUI
-{
-    [DefaultEvent("CheckedChanged")]
-    public class FlatRadioButton : Control
-    {
-        private MouseState State = MouseState.None;
-        private int W;
-        private int H;
-        private _Options O;
 
-        private bool _Checked;
-        public bool Checked
+    public int Maximum
+    {
+        get
         {
-            get { return _Checked; }
-            set
+            return _Maximum;
+
+        }
+        set
+        {
+            _Maximum = value;
+            RenewCurrentValue();
+            MoveTrack();
+            Invalidate();
+
+        }
+    }
+
+    public int Value
+    {
+        get
+        {
+            return _Value;
+        }
+        set
+        {
+            if (value != _Value)
             {
-                _Checked = value;
-                InvalidateControls();
-                if (CheckedChanged != null)
-                {
-                    CheckedChanged(this);
-                }
+                _Value = value;
+                RenewCurrentValue();
+                MoveTrack();
                 Invalidate();
-            }
-        }
+                if (Scroll != null)
+                    Scroll(this);
 
-        public event CheckedChangedEventHandler CheckedChanged;
-        public delegate void CheckedChangedEventHandler(object sender);
-
-        protected override void OnClick(EventArgs e)
-        {
-            if (!_Checked)
-                Checked = true;
-            base.OnClick(e);
-        }
-
-        private void InvalidateControls()
-        {
-            if (!IsHandleCreated || !_Checked)
-                return;
-            foreach (Control C in Parent.Controls)
-            {
-                if (!object.ReferenceEquals(C, this) && C is FlatRadioButton)
-                {
-                    ((FlatRadioButton)C).Checked = false;
-                    Invalidate();
-                }
-            }
-        }
-
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            InvalidateControls();
-        }
-
-        [Flags()]
-        public enum _Options
-        {
-            Style1,
-            Style2
-        }
-
-        [Category("Options")]
-        public _Options Options
-        {
-            get { return O; }
-            set { O = value; }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 22;
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _BorderColor = Helpers.FlatColor;
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatRadioButton()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            Cursor = Cursors.Hand;
-            Size = new Size(100, 22);
-            BackColor = Color.FromArgb(60, 70, 73);
-            Font = new Font("Segoe UI", 10);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            Rectangle Base = new Rectangle(0, 2, Height - 5, Height - 5);
-            Rectangle Dot = new Rectangle(4, 6, H - 12, H - 12);
-
-            var _with10 = G;
-            _with10.SmoothingMode = SmoothingMode.HighQuality;
-            _with10.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with10.Clear(BackColor);
-
-            switch (O)
-            {
-                case _Options.Style1:
-                    //-- Base
-                    _with10.FillEllipse(new SolidBrush(_BaseColor), Base);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            _with10.DrawEllipse(new Pen(_BorderColor), Base);
-                            break;
-                        case MouseState.Down:
-                            _with10.DrawEllipse(new Pen(_BorderColor), Base);
-                            break;
-                    }
-
-                    //-- If Checked 
-                    if (Checked)
-                    {
-                        _with10.FillEllipse(new SolidBrush(_BorderColor), Dot);
-                    }
-                    break;
-                case _Options.Style2:
-                    //-- Base
-                    _with10.FillEllipse(new SolidBrush(_BaseColor), Base);
-
-                    switch (State)
-                    {
-                        case MouseState.Over:
-                            //-- Base
-                            _with10.DrawEllipse(new Pen(_BorderColor), Base);
-                            _with10.FillEllipse(new SolidBrush(Color.FromArgb(118, 213, 170)), Base);
-                            break;
-                        case MouseState.Down:
-                            //-- Base
-                            _with10.DrawEllipse(new Pen(_BorderColor), Base);
-                            _with10.FillEllipse(new SolidBrush(Color.FromArgb(118, 213, 170)), Base);
-                            break;
-                    }
-
-                    //-- If Checked
-                    if (Checked)
-                    {
-                        //-- Base
-                        _with10.FillEllipse(new SolidBrush(_BorderColor), Dot);
-                    }
-                    break;
             }
 
-            _with10.DrawString(Text, Font, new SolidBrush(_TextColor), new Rectangle(20, 2, W, H), Helpers.NearSF);
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _BorderColor = colors.Flat;
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatStatusBar : Control
+
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
     {
-        private int W;
-        private int H;
-        private bool _ShowTimeDate = false;
-
-        protected override void CreateHandle()
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            base.CreateHandle();
-            Dock = DockStyle.Bottom;
-        }
 
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
+            Cursor = Cursors.Hand;
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), new Rectangle(0, (int)5.5, Width, 8));
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), new Rectangle(0, 5, Width - 1, 8));
 
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color TextColor
-        {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color RectColor
-        {
-            get { return _RectColor; }
-            set { _RectColor = value; }
-        }
-
-        public bool ShowTimeDate
-        {
-            get { return _ShowTimeDate; }
-            set { _ShowTimeDate = value; }
-        }
-
-        public string GetTimeDate()
-        {
-            return DateTime.Now.Date + " " + DateTime.Now.Hour + ":" + DateTime.Now.Minute;
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TextColor = Color.White;
-        private Color _RectColor = Helpers.FlatColor;
-
-        public FlatStatusBar()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            Font = new Font("Segoe UI", 8);
-            ForeColor = Color.White;
-            Size = new Size(Width, 20);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width;
-            H = Height;
-
-            Rectangle Base = new Rectangle(0, 0, W, H);
-
-            var _with21 = G;
-            _with21.SmoothingMode = SmoothingMode.HighQuality;
-            _with21.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with21.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with21.Clear(BaseColor);
-
-            //-- Base
-            _with21.FillRectangle(new SolidBrush(BaseColor), Base);
-
-            //-- Text
-            _with21.DrawString(Text, Font, Brushes.White, new Rectangle(10, 4, W, H), Helpers.NearSF);
-
-            //-- Rectangle
-            _with21.FillRectangle(new SolidBrush(_RectColor), new Rectangle(4, 4, 4, 14));
-
-            //-- TimeDate
-            if (ShowTimeDate)
+            if (CurrentValue != 0)
             {
-                _with21.DrawString(GetTimeDate(), Font, new SolidBrush(_TextColor), new Rectangle(-4, 2, W, H), new StringFormat
-                {
-                    Alignment = StringAlignment.Far,
-                    LineAlignment = StringAlignment.Center
-                });
+                G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(1, Convert.ToInt32(5.5), CurrentValue + 4, 7));
             }
 
-            base.OnPaint(e);
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Track);
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), Track);
+            G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), TrackSide);
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), TrackSide);
+
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _RectColor = colors.Flat;
-        }
     }
-}
-namespace FlatUI
-{
-    public class FlatStickyButton : Control
+
+    #endregion
+
+    #region Constructors
+
+    public ModalTrackBar()
     {
-        private int W;
-        private int H;
-        private MouseState State = MouseState.None;
-        private bool _Rounded = false;
+        SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint |
+        ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+        ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        UpdateStyles();
+        CurrentValue = Convert.ToInt32((Math.Round(Convert.ToDouble(Value / Maximum - 2) * Convert.ToDouble(Width))));
+    }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+    #endregion
+
+    #region Events
+
+    public event ScrollEventHandler Scroll;
+    public delegate void ScrollEventHandler(object sender);
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        if (Variable && e.X > -1 && e.X < Width + 1)
         {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
+            Value = Minimum + (int)Math.Round((double)(Maximum - Minimum) * (double)e.X / Width);
         }
 
-        protected override void OnMouseUp(MouseEventArgs e)
+        base.OnMouseMove(e);
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left && Height > 0)
         {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
+            RenewCurrentValue();
+            if (Width > 0 && Height > 0) Track = new Rectangle(CurrentValue + Convert.ToInt32(0.8), 0, 25, 24);
+
+            Variable = new Rectangle(CurrentValue, 0, 24, Height).Contains(e.Location);
         }
+        base.OnMouseDown(e);
+    }
 
-        protected override void OnMouseEnter(EventArgs e)
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        Variable = false;
+        base.OnMouseUp(e);
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Subtract || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left)
         {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        private bool[] GetConnectedSides()
-        {
-            bool[] Bool = new bool[4] { false, false, false, false };
-
-            foreach (Control B in Parent.Controls)
+            if (Value != 0)
             {
-                if (B is FlatStickyButton)
-                {
-                    if (object.ReferenceEquals(B, this) || !Rect.IntersectsWith(Rect))
-                        continue;
-                    double A = (Math.Atan2(Left - B.Left, Top - B.Top) * 2 / Math.PI);
-                    if (A / 1 == A)
-                        Bool[(int)A + 1] = true;
-                }
+                Value -= 1;
+
             }
 
-            return Bool;
         }
-
-        private Rectangle Rect
+        else if (e.KeyCode == Keys.Add || e.KeyCode == Keys.Up || e.KeyCode == Keys.Right)
         {
-            get { return new Rectangle(Left, Top, Width, Height); }
+            if (Value != Maximum)
+            {
+                Value += 1;
+            }
+
         }
+        base.OnKeyDown(e);
+    }
 
-        [Category("Colors")]
-        public Color BaseColor
+    protected override void OnResize(EventArgs e)
+    {
+        if (Width > 0 && Height > 0)
         {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
+            RenewCurrentValue();
+            MoveTrack();
+
         }
+        Height = 19;
+        Invalidate();
+        base.OnResize(e);
+    }
 
-        [Category("Colors")]
-        public Color TextColor
+    private void MoveTrack()
+    {
+        if (Height > 0 && Width > 0) { Track = new Rectangle(CurrentValue, 0, 21, (int)18.5); }
+        TrackSide = new Rectangle(CurrentValue + Convert.ToInt32(5.6), 5, 8, 8);
+    }
+
+    public void RenewCurrentValue()
+    {
+
+        CurrentValue = Convert.ToInt32(Math.Round((double)(Value - Minimum) / (double)(Maximum - Minimum) * (double)(Width - Convert.ToInt32(22.5))));
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Control Button
+
+public class ModalControlButton : Control
+{
+
+    #region Variables
+
+    private HelperMethods.MouseMode State;
+    private static HelperMethods H = new HelperMethods();
+    private Style _ControlStyle = Style.Close;
+
+    #endregion
+
+    #region Properties
+
+    public Style ControlStyle
+    {
+        get
         {
-            get { return _TextColor; }
-            set { _TextColor = value; }
+            return _ControlStyle;
         }
-
-        [Category("Options")]
-        public bool Rounded
+        set
         {
-            get { return _Rounded; }
-            set { _Rounded = value; }
+            _ControlStyle = value;
+            Invalidate();
         }
+    }
 
-        protected override void OnResize(EventArgs e)
+    #endregion
+
+    #region Enumenators
+
+    public enum Style
+    {
+        Close,
+        Minimize,
+        Maximize
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            base.OnResize(e);
-            //Height = 32
-        }
+            G.SmoothingMode = SmoothingMode.AntiAlias;
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            //Size = New Size(112, 32)
-        }
-
-        private Color _BaseColor = Helpers.FlatColor;
-        private Color _TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatStickyButton()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-            Size = new Size(106, 32);
-            BackColor = Color.Transparent;
-            Font = new Font("Segoe UI", 12);
-            Cursor = Cursors.Hand;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width;
-            H = Height;
-
-            GraphicsPath GP = new GraphicsPath();
-
-            bool[] GCS = GetConnectedSides();
-            // dynamic RoundedBase = Helpers.RoundRect(0, 0, W, H, ???, !(GCS(2) | GCS(1)), !(GCS(1) | GCS(0)), !(GCS(3) | GCS(0)), !(GCS(3) | GCS(2)));
-            GraphicsPath RoundedBase = Helpers.RoundRect(0, 0, W, H, 0.3, !(GCS[2] || GCS[1]), !(GCS[1] || GCS[0]), !(GCS[3] || GCS[0]), !(GCS[3] || GCS[2]));
-            Rectangle Base = new Rectangle(0, 0, W, H);
-
-            var _with17 = G;
-            _with17.SmoothingMode = SmoothingMode.HighQuality;
-            _with17.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with17.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with17.Clear(BackColor);
+            Rectangle R = new Rectangle(0, 0, Convert.ToInt32(18.5), 21);
 
             switch (State)
             {
-                case MouseState.None:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = RoundedBase;
-                        _with17.FillPath(new SolidBrush(_BaseColor), GP);
+                case HelperMethods.MouseMode.NormalMode:
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with17.FillRectangle(new SolidBrush(_BaseColor), Base);
+                    H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), R, 2);
+                    H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, R, 2); ;
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
+                    switch (ControlStyle)
+                    {
+
+                        case Style.Close:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            break;
+                        case Style.Maximize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            break;
+                        case Style.Minimize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            break;
                     }
+
                     break;
-                case MouseState.Over:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = RoundedBase;
-                        _with17.FillPath(new SolidBrush(_BaseColor), GP);
-                        _with17.FillPath(new SolidBrush(Color.FromArgb(20, Color.White)), GP);
+                case HelperMethods.MouseMode.Hovered:
+                    Cursor = Cursors.Hand;
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with17.FillRectangle(new SolidBrush(_BaseColor), Base);
-                        _with17.FillRectangle(new SolidBrush(Color.FromArgb(20, Color.White)), Base);
+                    H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("291a2a"))), R, 2);
+                    H.DrawRoundedPath(G, Color.FromArgb(130, H.GetHTMLColor("291a2a")), 1, R, 2); ;
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
+                    switch (ControlStyle)
+                    {
+
+                        case Style.Close:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            break;
+                        case Style.Maximize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            break;
+                        case Style.Minimize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            break;
                     }
+
                     break;
-                case MouseState.Down:
-                    if (Rounded)
-                    {
-                        //-- Base
-                        GP = RoundedBase;
-                        _with17.FillPath(new SolidBrush(_BaseColor), GP);
-                        _with17.FillPath(new SolidBrush(Color.FromArgb(20, Color.Black)), GP);
+                case HelperMethods.MouseMode.Pushed:
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
-                    }
-                    else
-                    {
-                        //-- Base
-                        _with17.FillRectangle(new SolidBrush(_BaseColor), Base);
-                        _with17.FillRectangle(new SolidBrush(Color.FromArgb(20, Color.Black)), Base);
+                    H.FillRoundedPath(G, H.SolidBrushHTMlColor("291a2a"), R, 2);
+                    H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, R, 2); ;
 
-                        //-- Text
-                        _with17.DrawString(Text, Font, new SolidBrush(_TextColor), Base, Helpers.CenterSF);
+                    switch (ControlStyle)
+                    {
+
+                        case Style.Close:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(5.4), Convert.ToInt32(5.4), 8, 11), 2);
+                            break;
+                        case Style.Maximize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(Convert.ToInt32(4.5), 6, 9, 9), 2);
+                            break;
+                        case Style.Minimize:
+                            H.FillRoundedPath(G, new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            H.DrawRoundedPath(G, H.GetHTMLColor("231625"), 1, new Rectangle(3, Convert.ToInt32(7.5), 12, 5), 2);
+                            break;
                     }
+
                     break;
             }
 
-            base.OnPaint(e);
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
+    }
 
-        private void UpdateColors()
+    #endregion
+
+    #region Constructors
+
+    public ModalControlButton()
+    {
+        SetStyle(ControlStyles.DoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw | ControlStyles.UserPaint |
+        ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnClick(EventArgs e)
+    {
+        base.OnClick(e);
+        if (ControlStyle == Style.Close)
         {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _BaseColor = colors.Flat;
+            Environment.Exit(0);
+            Application.Exit();
+        }
+        else if (ControlStyle == Style.Minimize)
+        {
+            if (FindForm().WindowState == FormWindowState.Normal)
+            {
+                FindForm().WindowState = FormWindowState.Minimized;
+            }
+        }
+        else if (ControlStyle == Style.Maximize)
+        {
+            if (FindForm().WindowState == FormWindowState.Normal)
+            {
+                FindForm().WindowState = FormWindowState.Maximized;
+            }
+            else if (FindForm().WindowState == FormWindowState.Maximized)
+            {
+                FindForm().WindowState = FormWindowState.Normal;
+            }
         }
     }
-}
-namespace FlatUI
-{
-    public class FlatTabControl : TabControl
+
+    protected override void OnResize(EventArgs e)
     {
-        private int W;
-        private int H;
+        base.OnResize(e);
+        Size = new Size(20, 23);
+    }
 
-        protected override void CreateHandle()
+    protected override void OnMouseEnter(EventArgs e)
+    {
+
+        base.OnMouseEnter(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+
+        base.OnMouseUp(e);
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+
+        base.OnMouseDown(e);
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+
+        base.OnMouseLeave(e);
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Horizental TabControl
+
+public class ModalHorizentalTabControl : TabControl
+{
+
+    #region Variables
+
+    private static HelperMethods H = new HelperMethods();
+    protected Color TabColor = H.GetHTMLColor("331f35");
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            base.CreateHandle();
-            Alignment = TabAlignment.Top;
-        }
 
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color ActiveColor
-        {
-            get { return _ActiveColor; }
-            set { _ActiveColor = value; }
-        }
-
-        private Color BGColor = Color.FromArgb(60, 70, 73);
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _ActiveColor = Helpers.FlatColor;
-
-        public FlatTabControl()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.FromArgb(60, 70, 73);
-
-            Font = new Font("Segoe UI", 10);
-            SizeMode = TabSizeMode.Fixed;
-            ItemSize = new Size(120, 40);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            var _with13 = G;
-            _with13.SmoothingMode = SmoothingMode.HighQuality;
-            _with13.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with13.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with13.Clear(_BaseColor);
-
-            try
+            G.Clear(H.GetHTMLColor("331f35"));
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            G.DrawLine(new Pen(Color.FromArgb(130, H.GetHTMLColor("5b2960")), 2), new Point(4, ItemSize.Height + 1), new Point(Width - 4, ItemSize.Height + 1));
+            for (int i = 0; i <= TabCount - 1; i++)
             {
-                SelectedTab.BackColor = BGColor;
+                Rectangle R = GetTabRect(i);
+                if (i == SelectedIndex)
+                {
+                    G.DrawLine(H.PenHTMlColor("5b2960", 2), new Point(R.X + 10, ItemSize.Height + 1), new Point(R.X - 10 + R.Width, ItemSize.Height + 1));
+                    H.CentreString(G, TabPages[i].Text, Font, H.SolidBrushHTMlColor("5b2960"), R);
+                    H.CentreString(G, TabPages[i].Text, Font, new SolidBrush(Color.FromArgb(30, Color.White)), R);
+                }
+                else
+                {
+                    H.CentreString(G, TabPages[i].Text, Font, H.SolidBrushHTMlColor("a89ea9"), R);
+                }
             }
-            catch
-            {
-            }
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalHorizentalTabControl()
+    {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        Alignment = TabAlignment.Top;
+        SizeMode = TabSizeMode.Fixed;
+        DrawMode = TabDrawMode.OwnerDrawFixed;
+        ItemSize = new Size(110, 35);
+        Font = new Font("Ubuntu", 13, FontStyle.Regular, GraphicsUnit.Pixel);
+        Dock = DockStyle.None;
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        foreach (TabPage Tab in base.TabPages)
+        {
+            Tab.BackColor = TabColor;
+        }
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region Vertical TabControl
+
+public class ModalVerticalTabControl : TabControl
+{
+
+    #region Variables
+
+    private static HelperMethods H = new HelperMethods();
+    private Color TabColor = H.GetHTMLColor("331f35");
+    private bool _ShowBorder = true;
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+
+            G.Clear(H.GetHTMLColor("331f35"));
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
             for (int i = 0; i <= TabCount - 1; i++)
             {
-                Rectangle Base = new Rectangle(new Point(GetTabRect(i).Location.X + 2, GetTabRect(i).Location.Y), new Size(GetTabRect(i).Width, GetTabRect(i).Height));
-                Rectangle BaseSize = new Rectangle(Base.Location, new Size(Base.Width, Base.Height));
-
-                if (i == SelectedIndex)
+                Rectangle R = GetTabRect(i);
+                if (TabPages[i].Tag != null)
                 {
-                    //-- Base
-                    _with13.FillRectangle(new SolidBrush(_BaseColor), BaseSize);
-
-                    //-- Gradiant
-                    //.fill
-                    _with13.FillRectangle(new SolidBrush(_ActiveColor), BaseSize);
-
-                    //-- ImageList
-                    if (ImageList != null)
-                    {
-                        try
-                        {
-                            if (ImageList.Images[TabPages[i].ImageIndex] != null)
-                            {
-                                //-- Image
-                                _with13.DrawImage(ImageList.Images[TabPages[i].ImageIndex], new Point(BaseSize.Location.X + 8, BaseSize.Location.Y + 6));
-                                //-- Text
-                                _with13.DrawString("      " + TabPages[i].Text, Font, Brushes.White, BaseSize, Helpers.CenterSF);
-                            }
-                            else
-                            {
-                                //-- Text
-                                _with13.DrawString(TabPages[i].Text, Font, Brushes.White, BaseSize, Helpers.CenterSF);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception(ex.Message);
-                        }
-                    }
-                    else
-                    {
-                        //-- Text
-                        _with13.DrawString(TabPages[i].Text, Font, Brushes.White, BaseSize, Helpers.CenterSF);
-                    }
+                    G.DrawString(TabPages[i].Text.ToUpper(), Font, new SolidBrush(Color.FromArgb(180, H.GetHTMLColor("5b2960"))), new Point(R.X + 5, R.Y + 9));
+                }
+                else if (i == SelectedIndex)
+                {
+                    G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), R);
+                    G.FillRectangle(new SolidBrush(Color.FromArgb(230, H.GetHTMLColor("291a2a"))), new Rectangle(R.X, R.Y, 5, R.Height));
+                    H.CentreString(G, TabPages[i].Text, Font, H.SolidBrushHTMlColor("5b2960"), R);
                 }
                 else
                 {
-                    //-- Base
-                    _with13.FillRectangle(new SolidBrush(_BaseColor), BaseSize);
-
-                    //-- ImageList
-                    if (ImageList != null)
-                    {
-                        try
-                        {
-                            if (ImageList.Images[TabPages[i].ImageIndex] != null)
-                            {
-                                //-- Image
-                                _with13.DrawImage(ImageList.Images[TabPages[i].ImageIndex], new Point(BaseSize.Location.X + 8, BaseSize.Location.Y + 6));
-                                //-- Text
-                                _with13.DrawString("      " + TabPages[i].Text, Font, new SolidBrush(Color.White), BaseSize, new StringFormat
-                                {
-                                    LineAlignment = StringAlignment.Center,
-                                    Alignment = StringAlignment.Center
-                                });
-                            }
-                            else
-                            {
-                                //-- Text
-                                _with13.DrawString(TabPages[i].Text, Font, new SolidBrush(Color.White), BaseSize, new StringFormat
-                                {
-                                    LineAlignment = StringAlignment.Center,
-                                    Alignment = StringAlignment.Center
-                                });
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception(ex.Message);
-                        }
-                    }
-                    else
-                    {
-                        //-- Text
-                        _with13.DrawString(TabPages[i].Text, Font, new SolidBrush(Color.White), BaseSize, new StringFormat
-                        {
-                            LineAlignment = StringAlignment.Center,
-                            Alignment = StringAlignment.Center
-                        });
-                    }
+                    H.CentreString(G, TabPages[i].Text, Font, H.SolidBrushHTMlColor("a89ea9"), R);
                 }
             }
-
-            base.OnPaint(e);
+            if (ShowBorder)
+            {
+                G.DrawRectangle(H.PenHTMlColor("291a2a", 1), new Rectangle(0, 0, Width - 1, Height - 1));
+            }
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
+    }
 
-        private void UpdateColors()
+    #endregion
+
+    #region Constructors
+
+    public ModalVerticalTabControl()
+    {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        SizeMode = TabSizeMode.Fixed;
+        ItemSize = new Size(30, 120);
+        DrawMode = TabDrawMode.OwnerDrawFixed;
+        Alignment = TabAlignment.Left;
+        Dock = DockStyle.None;
+        Font = new Font("Ubuntu", 13, FontStyle.Regular, GraphicsUnit.Pixel);
+        UpdateStyles();
+
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        foreach (TabPage Tab in base.TabPages)
         {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _ActiveColor = colors.Flat;
+            Tab.BackColor = TabColor;
         }
     }
-}
-namespace FlatUI
-{
-    [DefaultEvent("TextChanged")]
-    public class FlatTextBox : Control
+
+    #endregion
+
+    #region Properties
+
+    public bool ShowBorder
     {
-        private int W;
-        private int H;
-        private MouseState State = MouseState.None;
-        private System.Windows.Forms.TextBox TB;
-
-        private HorizontalAlignment _TextAlign = HorizontalAlignment.Left;
-        [Category("Options")]
-        public HorizontalAlignment TextAlign
+        get
         {
-            get { return _TextAlign; }
-            set
+            return _ShowBorder;
+        }
+        set
+        {
+            _ShowBorder = value;
+            Invalidate();
+        }
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region RichTextbox
+
+[DefaultEvent("TextChanged")]
+public class ModalRichTextbox : Control
+{
+
+    #region Variables
+
+    private RichTextBox T = new RichTextBox();
+
+    private bool _ReadOnly;
+    protected HelperMethods.MouseMode State = HelperMethods.MouseMode.NormalMode;
+    private static HelperMethods H = new HelperMethods();
+    private static Color TBC = H.GetHTMLColor("291a2a");
+    private static Color TFC = H.GetHTMLColor("a89ea9");
+    private bool _WordWrap;
+    private bool _AutoWordSelection;
+    private Color _BackColor = TBC;
+    #endregion
+
+    #region  Native Methods
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
+string lParam);
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
+        {
+
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Rect);
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), Rect);
+
+            if (ContextMenuStrip != null) { T.ContextMenuStrip = ContextMenuStrip; }
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalRichTextbox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        UpdateStyles();
+        Font = new Font("Arial", 11, FontStyle.Regular);
+        Size = new Size(135, 30);
+        T.Multiline = true;
+        T.Cursor = Cursors.IBeam;
+        T.BackColor = TBC;
+        T.ForeColor = TFC;
+        T.BorderStyle = BorderStyle.None;
+        T.Location = new Point(7, 7);
+        T.Font = Font;
+        T.Size = new Size(Width - 10, 30);
+        T.TextChanged += T_TextChanged;
+        T.MouseDown += T_MouseDown;
+        T.MouseEnter += T_MouseEnter;
+        T.MouseUp += T_MouseUp;
+        T.MouseLeave += T_MouseLeave;
+        T.MouseHover += T_MouseHover;
+        T.KeyDown += T_KeyDown;
+    }
+
+    #endregion
+
+    #region Properties
+
+    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public BorderStyle BorderStyle
+    {
+        get
+        {
+            return BorderStyle.None;
+        }
+    }
+
+    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool Multiline
+    {
+        get
+        {
+            return true;
+        }
+
+    }
+
+    public bool ReadOnly
+    {
+        get { return _ReadOnly; }
+        set
+        {
+            _ReadOnly = value;
+            if (T != null)
             {
-                _TextAlign = value;
-                if (TB != null)
-                {
-                    TB.TextAlign = value;
-                }
+                T.ReadOnly = value;
             }
         }
+    }
 
-        private int _MaxLength = 32767;
-        [Category("Options")]
-        public int MaxLength
+    [Browsable(false)]
+    public override Image BackgroundImage
+    {
+        get
         {
-            get { return _MaxLength; }
-            set
+            return null;
+        }
+    }
+
+    [Browsable(false)]
+    public override ImageLayout BackgroundImageLayout
+    {
+        get
+        {
+            return base.BackgroundImageLayout;
+        }
+        set
+        {
+            base.BackgroundImageLayout = value;
+        }
+    }
+
+    public override string Text
+    {
+        get
+        {
+            return base.Text;
+        }
+        set
+        {
+            base.Text = value;
+            if (T != null)
             {
-                _MaxLength = value;
-                if (TB != null)
-                {
-                    TB.MaxLength = value;
-                }
+                T.Text = value;
             }
         }
+    }
 
-        private bool _ReadOnly;
-        [Category("Options")]
-        public bool ReadOnly
+    override public Color BackColor
+    {
+
+        get { return Color.Transparent; }
+
+    }
+
+    override public Color ForeColor
+    {
+
+        get { return Color.Transparent; }
+
+    }
+
+    public bool WordWrap
+    {
+        get
         {
-            get { return _ReadOnly; }
-            set
+            return _WordWrap;
+        }
+        set
+        {
+            _WordWrap = value;
+            if (T != null)
             {
-                _ReadOnly = value;
-                if (TB != null)
-                {
-                    TB.ReadOnly = value;
-                }
+                T.WordWrap = value;
             }
         }
+    }
 
-        private bool _UseSystemPasswordChar;
-        [Category("Options")]
-        public bool UseSystemPasswordChar
+    public bool AutoWordSelection
+    {
+        get
         {
-            get { return _UseSystemPasswordChar; }
-            set
+            return _AutoWordSelection;
+        }
+        set
+        {
+            _AutoWordSelection = value;
+            if (T != null)
             {
-                _UseSystemPasswordChar = value;
-                if (TB != null)
-                {
-                    TB.UseSystemPasswordChar = value;
-                }
+                T.AutoWordSelection = value;
             }
         }
+    }
 
-        private bool _Multiline;
-        [Category("Options")]
-        public bool Multiline
+    #endregion
+
+    #region Events
+
+    private void T_MouseHover(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Hovered;
+        Invalidate();
+    }
+
+    private void T_MouseLeave(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.NormalMode;
+        Invalidate();
+    }
+
+    private void T_MouseUp(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_MouseEnter(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_MouseDown(object sender, EventArgs e)
+    {
+        State = HelperMethods.MouseMode.Pushed;
+        Invalidate();
+    }
+
+    private void T_TextChanged(object sender, EventArgs e)
+    {
+        Text = T.Text;
+    }
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        base.OnTextChanged(e);
+        T.Text = Text;
+    }
+
+    private void T_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Control && e.KeyCode == Keys.A) { e.SuppressKeyPress = true; }
+        if (e.Control && e.KeyCode == Keys.C)
         {
-            get { return _Multiline; }
-            set
-            {
-                _Multiline = value;
-                if (TB != null)
-                {
-                    TB.Multiline = value;
-
-                    if (value)
-                    {
-                        TB.Height = Height - 11;
-                    }
-                    else
-                    {
-                        Height = TB.Height + 11;
-                    }
-
-                }
-            }
+            T.Copy();
+            e.SuppressKeyPress = true;
         }
+    }
 
-        private bool _FocusOnHover = false;
-        [Category("Options")]
-        public bool FocusOnHover
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        if (!Controls.Contains(T)) { Controls.Add(T); }
+
+
+    }
+
+    protected override void OnFontChanged(EventArgs e)
+    {
+        base.OnFontChanged(e);
+        T.Font = Font;
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        T.Size = new Size(Width - 10, Height - 5);
+    }
+
+    #endregion
+
+
+}
+
+#endregion
+
+#region Switch
+
+[DefaultEvent("Switch")]
+public class ModalSwitch : Control
+{
+
+    #region Variables
+
+    private bool _Switched = false;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalSwitch()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+        ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        UpdateStyles();
+        BackColor = Color.Transparent;
+        Cursor = Cursors.Hand;
+        Font = new Font("Ubuntu", 10, FontStyle.Regular);
+        Size = new Size(70, 28);
+    }
+
+    #endregion
+
+    #region Properties
+
+    public bool Switched
+    {
+        get { return _Switched; }
+
+        set
         {
-            get { return _FocusOnHover; }
-            set { _FocusOnHover = value; }
+            _Switched = value;
+            Invalidate();
         }
+    }
 
-        [Category("Options")]
-        public override string Text
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        Bitmap B = new Bitmap(Width, Height);
+        using (Graphics G = Graphics.FromImage(B))
         {
-            get { return base.Text; }
-            set
+
+            G.SmoothingMode = SmoothingMode.HighQuality;
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            if (Switched)
             {
-                base.Text = value;
-                if (TB != null)
-                {
-                    TB.Text = value;
-                }
-            }
-        }
 
-        [Category("Options")]
-        public override Font Font
-        {
-            get { return base.Font; }
-            set
-            {
-                base.Font = value;
-                if (TB != null)
-                {
-                    TB.Font = value;
-                    TB.Location = new Point(3, 5);
-                    TB.Width = Width - 6;
+                G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(0, 0, 70, 27));
 
-                    if (!_Multiline)
-                    {
-                        Height = TB.Height + 11;
-                    }
-                }
-            }
-        }
+                G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), new Rectangle(Width - Convert.ToInt32(28.5), Convert.ToInt32(1.5), 25, 23));
+                G.DrawRectangle(H.PenHTMlColor("231625", 1), new Rectangle(Width - Convert.ToInt32(28.5), Convert.ToInt32(1.5), 25, 23));
+                G.DrawLine(H.PenHTMlColor("5b2960", 1), Width - 13, 8, Width - 13, 18);
+                G.DrawLine(H.PenHTMlColor("5b2960", 1), Width - 16, 7, Width - 16, 19);
+                G.DrawLine(H.PenHTMlColor("5b2960", 1), Width - 19, 8, Width - 19, 18);
 
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            if (!Controls.Contains(TB))
-            {
-                Controls.Add(TB);
-            }
-        }
-
-        private void OnBaseTextChanged(object s, EventArgs e)
-        {
-            Text = TB.Text;
-        }
-
-        private void OnBaseKeyDown(object s, KeyEventArgs e)
-        {
-            if (e.Control && e.KeyCode == Keys.A)
-            {
-                TB.SelectAll();
-                e.SuppressKeyPress = true;
-            }
-            if (e.Control && e.KeyCode == Keys.C)
-            {
-                TB.Copy();
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            TB.Location = new Point(5, 5);
-            TB.Width = Width - 10;
-
-            if (_Multiline)
-            {
-                TB.Height = Height - 11;
+                G.DrawString("ON", Font, Brushes.Silver, new Point(Width - 62, 5));
             }
             else
             {
-                Height = TB.Height + 11;
+                G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), new Rectangle(0, 0, 70, 27));
+
+                G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), new Rectangle(3, Convert.ToInt32(1.5), 25, 23));
+                G.DrawRectangle(H.PenHTMlColor("231625", 1), new Rectangle(3, Convert.ToInt32(1.5), 25, 23));
+
+                G.DrawLine(H.PenHTMlColor("231625", 1), 12, 8, 12, 18);
+                G.DrawLine(H.PenHTMlColor("231625", 1), 15, 7, 15, 19);
+                G.DrawLine(H.PenHTMlColor("231625", 1), 18, 8, 18, 18);
+
+                G.DrawString("OFF", Font, H.SolidBrushHTMlColor("a89ea9"), new Point(33, 5));
             }
 
-            base.OnResize(e);
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), new Rectangle(0, 0, 69, 27));
+
+            e.Graphics.DrawImage(B, 0, 0);
+            G.Dispose();
+            B.Dispose();
         }
 
-        [Category("Colors")]
-        public Color TextColor
+    }
+
+    #endregion
+
+    #region Events
+
+    public event CheckedChangedEventHandler Switch;
+    public delegate void CheckedChangedEventHandler(object sender);
+
+    protected override void OnClick(EventArgs e)
+    {
+
+        _Switched = !_Switched;
+        if (Switch != null)
         {
-            get { return _TextColor; }
-            set { _TextColor = value; }
+            Switch(this);
         }
+        base.OnClick(e);
+        Invalidate();
+    }
 
-        public override Color ForeColor
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        Size = new Size(70, 28);
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region ContextMenuStrip
+
+public class ModalContextMenuStrip : ContextMenuStrip
+{
+
+    #region Variables
+
+    private ToolStripItemClickedEventArgs ClickedEventArgs;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Constructors
+
+    public ModalContextMenuStrip()
+    {
+        Renderer = new ModalToolStripRender();
+        BackColor = H.GetHTMLColor("291a2a");
+    }
+
+    #endregion
+
+    #region Events
+
+    public event ClickedEventHandler Clicked;
+    public delegate void ClickedEventHandler(object sender);
+
+    protected override void OnItemClicked(ToolStripItemClickedEventArgs e)
+    {
+        if ((e.ClickedItem != null) && !(e.ClickedItem is ToolStripSeparator))
         {
-            get { return _TextColor; }
-            set { _TextColor = value; }
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            TB.Focus();
-            Invalidate();
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            if (FocusOnHover) TB.Focus();
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TextColor = Color.FromArgb(192, 192, 192);
-        private Color _BorderColor = Helpers.FlatColor;
-
-        public FlatTextBox()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-
-            BackColor = Color.Transparent;
-
-            TB = new System.Windows.Forms.TextBox();
-            TB.Font = new Font("Segoe UI", 10);
-            TB.Text = Text;
-            TB.BackColor = _BaseColor;
-            TB.ForeColor = _TextColor;
-            TB.MaxLength = _MaxLength;
-            TB.Multiline = _Multiline;
-            TB.ReadOnly = _ReadOnly;
-            TB.UseSystemPasswordChar = _UseSystemPasswordChar;
-            TB.BorderStyle = BorderStyle.None;
-            TB.Location = new Point(5, 5);
-            TB.Width = Width - 10;
-
-            TB.Cursor = Cursors.IBeam;
-
-            if (_Multiline)
+            if (object.ReferenceEquals(e, ClickedEventArgs))
+                OnItemClicked(e);
+            else
             {
-                TB.Height = Height - 11;
+                ClickedEventArgs = e; if (Clicked != null)
+                {
+                    Clicked(this);
+                }
+            }
+        }
+    }
+
+    protected override void OnMouseHover(EventArgs e)
+    {
+        base.OnMouseHover(e);
+        Cursor = Cursors.Hand;
+        Invalidate();
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        base.OnMouseUp(e);
+        Cursor = Cursors.Hand;
+        Invalidate();
+    }
+
+    #endregion
+
+    #region ModalToolStripMenuItem
+
+    public sealed class ModalToolStripMenuItem : ToolStripMenuItem
+    {
+
+        #region Constructors 
+
+        public ModalToolStripMenuItem()
+        {
+            AutoSize = false;
+            Size = new Size(160, 30);
+        }
+
+        #endregion
+
+        #region Adding DropDowns 
+
+        protected override ToolStripDropDown CreateDefaultDropDown()
+        {
+            if (DesignMode)
+            { return base.CreateDefaultDropDown(); }
+            ModalContextMenuStrip DP = new ModalContextMenuStrip();
+            DP.Items.AddRange(base.CreateDefaultDropDown().Items);
+            return DP;
+        }
+
+        #endregion
+
+    }
+
+    #endregion
+
+    #region ModalToolStripRender
+
+    public sealed class ModalToolStripRender : ToolStripProfessionalRenderer
+    {
+
+        #region Drawing Text
+
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            Rectangle textRect = new Rectangle(25, e.Item.ContentRectangle.Y, e.Item.ContentRectangle.Width - (24 + 16), e.Item.ContentRectangle.Height - 4);
+            using (Font F = new Font("Ubuntu", 11, FontStyle.Regular))
+            {
+                using (Brush B = e.Item.Enabled ? H.SolidBrushHTMlColor("a89ea9") : new SolidBrush(Color.FromArgb(70, H.GetHTMLColor("5b2960"))))
+                {
+                    using (StringFormat ST = new StringFormat { LineAlignment = StringAlignment.Center })
+                    {
+                        e.Graphics.DrawString(e.Text, F, B, textRect);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Drawing Backgrounds
+
+        protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+        {
+            base.OnRenderToolStripBackground(e);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = InterpolationMode.High;
+            e.Graphics.Clear(H.GetHTMLColor("291a2a"));
+        }
+
+        protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+        {
+            e.Graphics.InterpolationMode = InterpolationMode.High;
+            e.Graphics.Clear(H.GetHTMLColor("291a2a"));
+            Rectangle R = new Rectangle(0, e.Item.ContentRectangle.Y - 2, e.Item.ContentRectangle.Width + 4, e.Item.ContentRectangle.Height + 3);
+
+            e.Graphics.FillRectangle(e.Item.Selected && e.Item.Enabled ? new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))) : H.SolidBrushHTMlColor("291a2a"), R);
+
+        }
+
+        #endregion
+
+        #region Set Image Margin 
+
+        protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
+        {
+            //MyBase.OnRenderImageMargin(e) 
+            //I Make above line comment which makes users to be able to add images to ToolStrips
+        }
+
+        #endregion
+
+        #region Drawing Seperators & Borders 
+
+        protected override void OnRenderSeparator(ToolStripSeparatorRenderEventArgs e)
+        {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(200, H.GetHTMLColor("231625")), 1), new Point(e.Item.Bounds.Left, e.Item.Bounds.Height / 2), new Point(e.Item.Bounds.Right - 5, e.Item.Bounds.Height / 2));
+        }
+
+        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+        {
+            e.Graphics.InterpolationMode = InterpolationMode.High;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            H.DrawRoundedPath(e.Graphics, H.GetHTMLColor("231625"), 1, new Rectangle(e.AffectedBounds.X, e.AffectedBounds.Y, e.AffectedBounds.Width - 1, e.AffectedBounds.Height - 1), 4);
+        }
+
+        #endregion
+
+        #region Drawing DropDown Arrows
+
+        protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+        {
+            int ArrowX, ArrowY;
+            ArrowX = e.ArrowRectangle.X + e.ArrowRectangle.Width / 2;
+            ArrowY = e.ArrowRectangle.Y + e.ArrowRectangle.Height / 2;
+            Point[] ArrowPoints = new Point[] {
+                new Point(ArrowX - 5, ArrowY - 5),
+                new Point(ArrowX, ArrowY),
+                new Point(ArrowX - 5, ArrowY + 5)
+            };
+            if (e.Item.Enabled)
+            {
+                e.Graphics.FillPolygon(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), ArrowPoints);
             }
             else
             {
-                Height = TB.Height + 11;
+                e.Graphics.FillPolygon(new SolidBrush(Color.FromArgb(40, H.GetHTMLColor("5b2960"))), ArrowPoints);
             }
-
-            TB.TextChanged += OnBaseTextChanged;
-            TB.KeyDown += OnBaseKeyDown;
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        #endregion
+
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region NumericalUpDown
+
+public class ModalNumericUpDown : Control
+{
+
+    #region  Variables
+
+    private int X, Y, _Value, _Maximum, _Minimum;
+    private static HelperMethods H = new HelperMethods();
+
+    #endregion
+
+    #region Draw Control
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        using (Bitmap B = new Bitmap(Width, Height))
+        using (Graphics G = Graphics.FromImage(B))
         {
-            this.UpdateColors();
 
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
+            G.SmoothingMode = SmoothingMode.AntiAlias;
+            G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-            Rectangle Base = new Rectangle(0, 0, W, H);
+            Rectangle Rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
-            var _with12 = G;
-            _with12.SmoothingMode = SmoothingMode.HighQuality;
-            _with12.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with12.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with12.Clear(BackColor);
+            G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), Rect);
 
-            //-- Colors
-            TB.BackColor = _BaseColor;
-            TB.ForeColor = _TextColor;
+            G.FillPath(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), H.RoundRec(new Rectangle(Width - 25, Convert.ToInt32(0.6), 23, Height - Convert.ToInt32(2.6)), 2));
+            G.DrawLine(H.PenHTMlColor("231625", 1), new Point(Width - 25, 1), new Point(Width - 25, Height - 2));
+            G.DrawRectangle(H.PenHTMlColor("231625", 1), Rect);
+            using (GraphicsPath AboveWardTriangle = new GraphicsPath())
+            {
+                AboveWardTriangle.AddLine(Width - 17, 10, Width - 2, 10);
+                AboveWardTriangle.AddLine(Width - 9, 10, Width - 13, 4);
+                AboveWardTriangle.CloseFigure();
+                G.FillPath(H.SolidBrushHTMlColor("291a2a"), AboveWardTriangle);
+            }
 
-            //-- Base
-            _with12.FillRectangle(new SolidBrush(_BaseColor), Base);
+            using (GraphicsPath DownWardTriangle = new GraphicsPath())
+            {
+                DownWardTriangle.AddLine(Width - 17, 13, Width - 2, 13);
+                DownWardTriangle.AddLine(Width - 9, 13, Width - 13, 19);
+                DownWardTriangle.CloseFigure();
+                G.FillPath(H.SolidBrushHTMlColor("291a2a"), DownWardTriangle);
+            }
 
-            base.OnPaint(e);
+            H.CentreString(G, Value.ToString(), Font, H.SolidBrushHTMlColor("a89ea9"), new Rectangle(0, 0, Width - 18, Height - 1));
+
+
+            e.Graphics.DrawImage(B, 0, 0);
             G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
             B.Dispose();
         }
+    }
 
-        private void UpdateColors()
+    #endregion
+
+    #region Properties
+
+    public int Value
+    {
+        get
         {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _BorderColor = colors.Flat;
+            return _Value;
+        }
+        set
+        {
+            if (value <= Maximum & value >= Minimum) { _Value = value; }
+            Invalidate();
         }
     }
-}
-namespace FlatUI
-{
-    [DefaultEvent("CheckedChanged")]
-    public class FlatToggle : Control
+
+    public int Maximum
     {
-        private int W;
-        private int H;
-        private _Options O;
-        private bool _Checked = false;
-        private MouseState State = MouseState.None;
-
-        public event CheckedChangedEventHandler CheckedChanged;
-        public delegate void CheckedChangedEventHandler(object sender);
-
-        [Flags()]
-        public enum _Options
+        get
         {
-            Style1,
-            Style2,
-            Style3,
-            Style4,
-            //-- TODO: New Style
-            Style5
-            //-- TODO: New Style
+            return _Maximum;
         }
-
-        [Category("Options")]
-        public _Options Options
+        set
         {
-            get { return O; }
-            set { O = value; }
-        }
-
-        [Category("Options")]
-        public bool Checked
-        {
-            get { return _Checked; }
-            set { _Checked = value; }
-        }
-
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
+            if (value > Minimum) { _Maximum = value; }
+            if (value > _Maximum) { value = _Maximum; }
             Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Width = 76;
-            Height = 33;
-        }
-
-        protected override void OnMouseEnter(System.EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            State = MouseState.Down;
-            Invalidate();
-        }
-
-        protected override void OnMouseLeave(System.EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            State = MouseState.None;
-            Invalidate();
-        }
-        protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            State = MouseState.Over;
-            Invalidate();
-        }
-
-        protected override void OnClick(EventArgs e)
-        {
-            base.OnClick(e);
-            _Checked = !_Checked;
-            if (CheckedChanged != null)
-            {
-                CheckedChanged(this);
-            }
-        }
-
-        private Color BaseColor = Helpers.FlatColor;
-        private Color BaseColorRed = Color.FromArgb(220, 85, 96);
-        private Color BGColor = Color.FromArgb(84, 85, 86);
-        private Color ToggleColor = Color.FromArgb(45, 47, 49);
-        private Color TextColor = Color.FromArgb(243, 243, 243);
-
-        public FlatToggle()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            DoubleBuffered = true;
-            BackColor = Color.Transparent;
-            Size = new Size(44, Height + 1);
-            Cursor = Cursors.Hand;
-            Font = new Font("Segoe UI", 10);
-            Size = new Size(76, 33);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            GraphicsPath GP = new GraphicsPath();
-            GraphicsPath GP2 = new GraphicsPath();
-            Rectangle Base = new Rectangle(0, 0, W, H);
-            Rectangle Toggle = new Rectangle(Convert.ToInt32(W / 2), 0, 38, H);
-
-            var _with9 = G;
-            _with9.SmoothingMode = SmoothingMode.HighQuality;
-            _with9.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with9.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with9.Clear(BackColor);
-
-            switch (O)
-            {
-                case _Options.Style1:
-                    //-- Style 1
-                    //-- Base
-                    GP = Helpers.RoundRec(Base, 6);
-                    GP2 = Helpers.RoundRec(Toggle, 6);
-                    _with9.FillPath(new SolidBrush(BGColor), GP);
-                    _with9.FillPath(new SolidBrush(ToggleColor), GP2);
-
-                    //-- Text
-                    _with9.DrawString("OFF", Font, new SolidBrush(BGColor), new Rectangle(19, 1, W, H), Helpers.CenterSF);
-
-                    if (Checked)
-                    {
-                        //-- Base
-                        GP = Helpers.RoundRec(Base, 6);
-                        GP2 = Helpers.RoundRec(new Rectangle(Convert.ToInt32(W / 2), 0, 38, H), 6);
-                        _with9.FillPath(new SolidBrush(ToggleColor), GP);
-                        _with9.FillPath(new SolidBrush(BaseColor), GP2);
-
-                        //-- Text
-                        _with9.DrawString("ON", Font, new SolidBrush(BaseColor), new Rectangle(8, 7, W, H), Helpers.NearSF);
-                    }
-                    break;
-                case _Options.Style2:
-                    //-- Style 2
-                    //-- Base
-                    GP = Helpers.RoundRec(Base, 6);
-                    Toggle = new Rectangle(4, 4, 36, H - 8);
-                    GP2 = Helpers.RoundRec(Toggle, 4);
-                    _with9.FillPath(new SolidBrush(BaseColorRed), GP);
-                    _with9.FillPath(new SolidBrush(ToggleColor), GP2);
-
-                    //-- Lines
-                    _with9.DrawLine(new Pen(BGColor), 18, 20, 18, 12);
-                    _with9.DrawLine(new Pen(BGColor), 22, 20, 22, 12);
-                    _with9.DrawLine(new Pen(BGColor), 26, 20, 26, 12);
-
-                    //-- Text
-                    _with9.DrawString("r", new Font("Marlett", 8), new SolidBrush(TextColor), new Rectangle(19, 2, Width, Height), Helpers.CenterSF);
-
-                    if (Checked)
-                    {
-                        GP = Helpers.RoundRec(Base, 6);
-                        Toggle = new Rectangle(Convert.ToInt32(W / 2) - 2, 4, 36, H - 8);
-                        GP2 = Helpers.RoundRec(Toggle, 4);
-                        _with9.FillPath(new SolidBrush(BaseColor), GP);
-                        _with9.FillPath(new SolidBrush(ToggleColor), GP2);
-
-                        //-- Lines
-                        _with9.DrawLine(new Pen(BGColor), Convert.ToInt32(W / 2) + 12, 20, Convert.ToInt32(W / 2) + 12, 12);
-                        _with9.DrawLine(new Pen(BGColor), Convert.ToInt32(W / 2) + 16, 20, Convert.ToInt32(W / 2) + 16, 12);
-                        _with9.DrawLine(new Pen(BGColor), Convert.ToInt32(W / 2) + 20, 20, Convert.ToInt32(W / 2) + 20, 12);
-
-                        //-- Text
-                        _with9.DrawString("ü", new Font("Wingdings", 14), new SolidBrush(TextColor), new Rectangle(8, 7, Width, Height), Helpers.NearSF);
-                    }
-                    break;
-                case _Options.Style3:
-                    //-- Style 3
-                    //-- Base
-                    GP = Helpers.RoundRec(Base, 16);
-                    Toggle = new Rectangle(W - 28, 4, 22, H - 8);
-                    GP2.AddEllipse(Toggle);
-                    _with9.FillPath(new SolidBrush(ToggleColor), GP);
-                    _with9.FillPath(new SolidBrush(BaseColorRed), GP2);
-
-                    //-- Text
-                    _with9.DrawString("OFF", Font, new SolidBrush(BaseColorRed), new Rectangle(-12, 2, W, H), Helpers.CenterSF);
-
-                    if (Checked)
-                    {
-                        //-- Base
-                        GP = Helpers.RoundRec(Base, 16);
-                        Toggle = new Rectangle(6, 4, 22, H - 8);
-                        GP2.Reset();
-                        GP2.AddEllipse(Toggle);
-                        _with9.FillPath(new SolidBrush(ToggleColor), GP);
-                        _with9.FillPath(new SolidBrush(BaseColor), GP2);
-
-                        //-- Text
-                        _with9.DrawString("ON", Font, new SolidBrush(BaseColor), new Rectangle(12, 2, W, H), Helpers.CenterSF);
-                    }
-                    break;
-                case _Options.Style4:
-                    //-- TODO: New Styles
-                    if (Checked)
-                    {
-                        //--
-                    }
-                    break;
-                case _Options.Style5:
-                    //-- TODO: New Styles
-                    if (Checked)
-                    {
-                        //--
-                    }
-                    break;
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            BaseColor = colors.Flat;
         }
     }
-}
-namespace FlatUI
-{
-    [DefaultEvent("Scroll")]
-    public class FlatTrackBar : Control
+
+    public int Minimum
     {
-        private int W;
-        private int H;
-        private int Val;
-        private bool Bool;
-        private Rectangle Track;
-        private Rectangle Knob;
-        private _Style Style_;
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        get
         {
-            base.OnMouseDown(e);
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                Val = Convert.ToInt32((float)(_Value - _Minimum) / (float)(_Maximum - _Minimum) * (float)(Width - 11));
-                Track = new Rectangle(Val, 0, 10, 20);
+            return _Minimum;
+        }
+        set
+        {
+            if (value < Maximum) { _Minimum = value; }
+            if (value < _Minimum) { value = _Minimum; }
+            Invalidate();
+        }
 
-                Bool = Track.Contains(e.Location);
+    }
+
+
+    #endregion
+
+    #region Constructors
+
+    public ModalNumericUpDown()
+    {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        BackColor = Color.Transparent;
+        Font = new Font("Ubuntu", 10, FontStyle.Regular);
+        UpdateStyles();
+    }
+
+    #endregion
+
+    #region Events
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+
+    }
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        base.OnMouseMove(e);
+        X = e.Location.X;
+        Y = e.Location.Y;
+        Invalidate();
+        if (e.X < Width - 24) { Cursor = Cursors.IBeam; } else { Cursor = Cursors.Default; }
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        base.OnMouseDown(e);
+        if (X > Width - 18 && X < Width - 4)
+        {
+            if (Y < 14)
+            {
+                if ((Value + 1) <= Maximum) { Value += 1; }
             }
         }
-
-        protected override void OnMouseMove(MouseEventArgs e)
+        else
         {
-            base.OnMouseMove(e);
-            if (Bool && e.X > -1 && e.X < (Width + 1))
+            if ((Value - 1) >= Minimum) { Value -= 1; }
+
+        }
+        Invalidate();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+
+        Invalidate();
+    }
+
+    #endregion
+
+}
+
+#endregion
+
+#region ListBox
+
+public class ModalListBox : Control
+{
+
+    #region Variables
+
+    private ListBox LB = new ListBox();
+    private static HelperMethods H = new HelperMethods();
+    private string[] _Items = new string[] { string.Empty };
+
+    #endregion
+
+    #region Properties
+
+    public string[] Items
+    {
+        get { return _Items; }
+        set
+        {
+            _Items = value;
+            LB.Items.Clear();
+            LB.Items.AddRange(value);
+            Invalidate();
+        }
+    }
+
+    public string SelectedItem
+    {
+        get
+        {
+            return LB.SelectedItem.ToString();
+        }
+    }
+
+    public int SelectedIndex
+    {
+        get
+        {
+
+            if (LB.SelectedIndex < 0)
             {
-                Value = _Minimum + Convert.ToInt32((float)(_Maximum - _Minimum) * ((float)e.X / (float)Width));
+                return 0;
+            }
+            else
+            {
+                return LB.SelectedIndex;
             }
         }
+    }
 
-        protected override void OnMouseUp(MouseEventArgs e)
+    public void Clear()
+    {
+        LB.Items.Clear();
+    }
+
+    #endregion
+
+    #region Events
+
+    public void ClearSelected()
+    {
+        for (int i = (LB.SelectedItems.Count - 1); i >= 0; i += -1)
         {
-            base.OnMouseUp(e);
-            Bool = false;
+            LB.Items.Remove(LB.SelectedItems[i]);
         }
+    }
 
-        [Flags()]
-        public enum _Style
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        LB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+        LB.ScrollAlwaysVisible = false;
+        LB.HorizontalScrollbar = false;
+        LB.BorderStyle = BorderStyle.None;
+        LB.ItemHeight = 20;
+        LB.IntegralHeight = false;
+        LB.DrawItem += OnDrawItem;
+        if (!Controls.Contains(LB))
         {
-            Slider,
-            Knob
+            Controls.Add(LB);
         }
+    }
 
-        public _Style Style
+    public void AddRange(object[] items)
+    {
+        LB.Items.Remove(string.Empty);
+        LB.Items.AddRange(items);
+    }
+
+    public void AddItem(object item)
+    {
+        LB.Items.Remove(string.Empty);
+        LB.Items.Add(item);
+    }
+
+    private void LB_SelectIndexChanged(object sender, EventArgs e)
+    {
+        LB.Invalidate();
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public ModalListBox()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+        DoubleBuffered = true;
+        Font = new Font("Ubuntu", 10, FontStyle.Regular);
+        BackColor = Color.Transparent;
+        LB.BackColor = H.GetHTMLColor("291a2a");
+        LB.ForeColor = H.GetHTMLColor("a89ea9");
+        LB.Location = new Point(2, 2);
+        LB.SelectedIndexChanged += LB_SelectIndexChanged;
+        LB.Font = Font;
+        LB.Items.Clear();
+        Size = new Size(130, 100);
+    }
+
+    #endregion
+
+    #region Draw Control
+
+    protected void OnDrawItem(object sender, DrawItemEventArgs e)
+    {
+        //e.DrawBackground();
+
+        using (Bitmap B = new Bitmap(Width, Height))
         {
-            get { return Style_; }
-            set { Style_ = value; }
-        }
-
-        [Category("Colors")]
-        public Color TrackColor
-        {
-            get { return _TrackColor; }
-            set { _TrackColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color HatchColor
-        {
-            get { return _HatchColor; }
-            set { _HatchColor = value; }
-        }
-
-        public event ScrollEventHandler Scroll;
-        public delegate void ScrollEventHandler(object sender);
-
-        private int _Minimum;
-        public int Minimum
-        {
-            get
+            using (Graphics G = Graphics.FromImage(B))
             {
-                int functionReturnValue = 0;
-                return functionReturnValue;
-                return functionReturnValue;
-            }
-            set
-            {
-                if (value < 0)
-                {
-                }
+                G.SmoothingMode = SmoothingMode.HighQuality;
+                G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-                _Minimum = value;
-
-                if (value > _Value)
-                    _Value = value;
-                if (value > _Maximum)
-                    _Maximum = value;
-                Invalidate();
-            }
-        }
-
-        private int _Maximum = 10;
-        public int Maximum
-        {
-            get { return _Maximum; }
-            set
-            {
-                if (value < 0)
-                {
-                }
-
-                _Maximum = value;
-                if (value < _Value)
-                    _Value = value;
-                if (value < _Minimum)
-                    _Minimum = value;
-                Invalidate();
-            }
-        }
-
-        private int _Value;
-        public int Value
-        {
-            get { return _Value; }
-            set
-            {
-                if (value == _Value)
+                if (e.Index < 0 | Items.Length < 1)
                     return;
 
-                if (value > _Maximum || value < _Minimum)
+
+                Rectangle MainRect = new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width + 2, e.Bounds.Height - 1);
+                Rectangle ItemRect = new Rectangle(e.Bounds.X - 1, e.Bounds.Y + 4, e.Bounds.Width, e.Bounds.Height + 2);
+
+                G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), ItemRect);
+
+
+                if (e.State > 0)
                 {
+                    G.FillRectangle(new SolidBrush(Color.FromArgb(130, H.GetHTMLColor("5b2960"))), ItemRect);
+                    G.DrawRectangle(H.PenHTMlColor("231625", 1), ItemRect);
+                    G.DrawString(Items[e.Index].ToString(), Font, H.SolidBrushHTMlColor("a89ea9"), 3, e.Bounds.Y + 4);
+
+                }
+                else
+                {
+                    G.DrawString(Items[e.Index].ToString(), Font, H.SolidBrushHTMlColor("a89ea9"), 3, e.Bounds.Y + 4);
+
                 }
 
-                _Value = value;
-                Invalidate();
-                if (Scroll != null)
-                {
-                    Scroll(this);
-                }
+
+                e.Graphics.DrawImage(B, 0, 0);
+                G.Dispose();
+                B.Dispose();
+
             }
         }
 
-        private bool _ShowValue = false;
-        public bool ShowValue
-        {
-            get { return _ShowValue; }
-            set { _ShowValue = value; }
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Subtract)
-            {
-                if (Value == 0)
-                    return;
-                Value -= 1;
-            }
-            else if (e.KeyCode == Keys.Add)
-            {
-                if (Value == _Maximum)
-                    return;
-                Value += 1;
-            }
-        }
-
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-            Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Height = 23;
-        }
-
-        private Color BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _TrackColor = Helpers.FlatColor;
-        private Color SliderColor = Color.FromArgb(25, 27, 29);
-        private Color _HatchColor = Color.FromArgb(23, 148, 92);
-
-        public FlatTrackBar()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            Height = 18;
-
-            BackColor = Color.FromArgb(60, 70, 73);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            this.UpdateColors();
-
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width - 1;
-            H = Height - 1;
-
-            Rectangle Base = new Rectangle(1, 6, W - 2, 8);
-            GraphicsPath GP = new GraphicsPath();
-            GraphicsPath GP2 = new GraphicsPath();
-
-            var _with20 = G;
-            _with20.SmoothingMode = SmoothingMode.HighQuality;
-            _with20.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with20.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with20.Clear(BackColor);
-
-            //-- Value
-            Val = Convert.ToInt32((float)(_Value - _Minimum) / (float)(_Maximum - _Minimum) * (float)(W - 10));
-            Track = new Rectangle(Val, 0, 10, 20);
-            Knob = new Rectangle(Val, 4, 11, 14);
-
-            //-- Base
-            GP.AddRectangle(Base);
-            _with20.SetClip(GP);
-            _with20.FillRectangle(new SolidBrush(BaseColor), new Rectangle(0, 7, W, 8));
-            _with20.FillRectangle(new SolidBrush(_TrackColor), new Rectangle(0, 7, Track.X + Track.Width, 8));
-            _with20.ResetClip();
-
-            //-- Hatch Brush
-            HatchBrush HB = new HatchBrush(HatchStyle.Plaid, HatchColor, _TrackColor);
-            _with20.FillRectangle(HB, new Rectangle(-10, 7, Track.X + Track.Width, 8));
-
-            //-- Slider/Knob
-            switch (Style)
-            {
-                case _Style.Slider:
-                    GP2.AddRectangle(Track);
-                    _with20.FillPath(new SolidBrush(SliderColor), GP2);
-                    break;
-                case _Style.Knob:
-                    GP2.AddEllipse(Knob);
-                    _with20.FillPath(new SolidBrush(SliderColor), GP2);
-                    break;
-            }
-
-            //-- Show the value 
-            if (ShowValue)
-            {
-                _with20.DrawString(Value.ToString(), new Font("Segoe UI", 8), Brushes.White, new Rectangle(1, 6, W, H), new StringFormat
-                {
-                    Alignment = StringAlignment.Far,
-                    LineAlignment = StringAlignment.Far
-                });
-            }
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-
-        private void UpdateColors()
-        {
-            FlatColors colors = Helpers.GetColors(this);
-
-            _TrackColor = colors.Flat;
-        }
     }
-}
-namespace FlatUI
-{
-    public class FlatTreeView : TreeView
+
+    protected override void OnPaint(PaintEventArgs e)
     {
-        private TreeNodeStates State;
-
-        protected override void OnDrawNode(DrawTreeNodeEventArgs e)
+        using (Bitmap B = new Bitmap(Width, Height))
         {
-            try
+            using (Graphics G = Graphics.FromImage(B))
             {
-                Rectangle Bounds = new Rectangle(e.Bounds.Location.X, e.Bounds.Location.Y, e.Bounds.Width, e.Bounds.Height);
-                //e.Node.Nodes.Item.
-                switch (State)
-                {
-                    case TreeNodeStates.Default:
-                        e.Graphics.FillRectangle(Brushes.Red, Bounds);
-                        e.Graphics.DrawString(e.Node.Text, new Font("Segoe UI", 8), Brushes.LimeGreen, new Rectangle(Bounds.X + 2, Bounds.Y + 2, Bounds.Width, Bounds.Height), Helpers.NearSF);
-                        Invalidate();
-                        break;
-                    case TreeNodeStates.Checked:
-                        e.Graphics.FillRectangle(Brushes.Green, Bounds);
-                        e.Graphics.DrawString(e.Node.Text, new Font("Segoe UI", 8), Brushes.Black, new Rectangle(Bounds.X + 2, Bounds.Y + 2, Bounds.Width, Bounds.Height), Helpers.NearSF);
-                        Invalidate();
-                        break;
-                    case TreeNodeStates.Selected:
-                        e.Graphics.FillRectangle(Brushes.Green, Bounds);
-                        e.Graphics.DrawString(e.Node.Text, new Font("Segoe UI", 8), Brushes.Black, new Rectangle(Bounds.X + 2, Bounds.Y + 2, Bounds.Width, Bounds.Height), Helpers.NearSF);
-                        Invalidate();
-                        break;
-                }
+
+                G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+                Rectangle MainRect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+                LB.Size = new Size(Width - 6, Height - 5);
+                G.FillRectangle(H.SolidBrushHTMlColor("291a2a"), MainRect);
+                G.DrawRectangle(H.PenHTMlColor("231625", 1), MainRect);
+
+
+                e.Graphics.DrawImage(B, 0, 0);
+                G.Dispose();
+                B.Dispose();
 
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            base.OnDrawNode(e);
-        }
-
-        private Color _BaseColor = Color.FromArgb(45, 47, 49);
-        private Color _LineColor = Color.FromArgb(25, 27, 29);
-
-        public FlatTreeView()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-
-            BackColor = _BaseColor;
-            ForeColor = Color.White;
-            LineColor = _LineColor;
-            DrawMode = TreeViewDrawMode.OwnerDrawAll;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-
-            Rectangle Base = new Rectangle(0, 0, Width, Height);
-
-            var _with22 = G;
-            _with22.SmoothingMode = SmoothingMode.HighQuality;
-            _with22.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with22.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with22.Clear(BackColor);
-
-            _with22.FillRectangle(new SolidBrush(_BaseColor), Base);
-            _with22.DrawString(Text, new Font("Segoe UI", 8), Brushes.Black, new Rectangle(Bounds.X + 2, Bounds.Y + 2, Bounds.Width, Bounds.Height), Helpers.NearSF);
-
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
         }
     }
+
+    #endregion
+
 }
-namespace FlatUI
-{
-    public class FormSkin : ContainerControl
-    {
-        private int W;
-        private int H;
-        private bool Cap = false;
-        private bool _HeaderMaximize = false;
-        private Point MousePoint = new Point(0, 0);
-        private int MoveHeight = 50;
 
-        [Category("Colors")]
-        public Color HeaderColor
-        {
-            get { return _HeaderColor; }
-            set { _HeaderColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color BaseColor
-        {
-            get { return _BaseColor; }
-            set { _BaseColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color BorderColor
-        {
-            get { return _BorderColor; }
-            set { _BorderColor = value; }
-        }
-
-        [Category("Colors")]
-        public Color FlatColor
-        {
-            // get { return Helpers.FlatColor; }
-            // set { Helpers.FlatColor = value; }
-            get { return _FlatColor; }
-            set { _FlatColor = value; }
-        }
-
-        [Category("Options")]
-        public bool HeaderMaximize
-        {
-            get { return _HeaderMaximize; }
-            set { _HeaderMaximize = value; }
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            if (e.Button == System.Windows.Forms.MouseButtons.Left & new Rectangle(0, 0, Width, MoveHeight).Contains(e.Location))
-            {
-                Cap = true;
-                MousePoint = e.Location;
-            }
-        }
-
-        private void FormSkin_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (HeaderMaximize)
-            {
-                if (e.Button == System.Windows.Forms.MouseButtons.Left & new Rectangle(0, 0, Width, MoveHeight).Contains(e.Location))
-                {
-                    if (FindForm().WindowState == FormWindowState.Normal)
-                    {
-                        FindForm().WindowState = FormWindowState.Maximized;
-                        FindForm().Refresh();
-                    }
-                    else if (FindForm().WindowState == FormWindowState.Maximized)
-                    {
-                        FindForm().WindowState = FormWindowState.Normal;
-                        FindForm().Refresh();
-                    }
-                }
-            }
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            Cap = false;
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            if (Cap)
-            {
-                // Parent.Location = MousePosition - MousePoint;
-                Parent.Location = new Point(
-                    MousePosition.X - MousePoint.X,
-                    MousePosition.Y - MousePoint.Y
-                );
-            }
-        }
-
-        protected override void OnCreateControl()
-        {
-            base.OnCreateControl();
-            ParentForm.FormBorderStyle = FormBorderStyle.None;
-            ParentForm.AllowTransparency = false;
-            ParentForm.TransparencyKey = Color.Fuchsia;
-            ParentForm.FindForm().StartPosition = FormStartPosition.CenterScreen;
-            Dock = DockStyle.Fill;
-            Invalidate();
-        }
-
-        private Color _HeaderColor = Color.FromArgb(45, 47, 49);
-        private Color _BaseColor = Color.FromArgb(60, 70, 73);
-        private Color _BorderColor = Color.FromArgb(53, 58, 60);
-        private Color _FlatColor = Helpers.FlatColor;
-        private Color TextColor = Color.FromArgb(234, 234, 234);
-
-        private Color _HeaderLight = Color.FromArgb(171, 171, 172);
-        private Color _BaseLight = Color.FromArgb(196, 199, 200);
-        public Color TextLight = Color.FromArgb(45, 47, 49);
-
-        public FormSkin()
-        {
-            MouseDoubleClick += FormSkin_MouseDoubleClick;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-            DoubleBuffered = true;
-            BackColor = Color.White;
-            Font = new Font("Segoe UI", 12);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Bitmap B = new Bitmap(Width, Height);
-            Graphics G = Graphics.FromImage(B);
-            W = Width;
-            H = Height;
-
-            Rectangle Base = new Rectangle(0, 0, W, H);
-            Rectangle Header = new Rectangle(0, 0, W, 50);
-
-            var _with2 = G;
-            _with2.SmoothingMode = SmoothingMode.HighQuality;
-            _with2.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            _with2.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _with2.Clear(BackColor);
-
-            //-- Base
-            _with2.FillRectangle(new SolidBrush(_BaseColor), Base);
-
-            //-- Header
-            _with2.FillRectangle(new SolidBrush(_HeaderColor), Header);
-
-            //-- Logo
-            _with2.FillRectangle(new SolidBrush(Color.FromArgb(243, 243, 243)), new Rectangle(8, 16, 4, 18));
-            _with2.FillRectangle(new SolidBrush(FlatColor), 16, 16, 4, 18);
-            _with2.DrawString(Text, Font, new SolidBrush(TextColor), new Rectangle(26, 15, W, H), Helpers.NearSF);
-
-            //-- Border
-            _with2.DrawRectangle(new Pen(_BorderColor), Base);
-
-            base.OnPaint(e);
-            G.Dispose();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImageUnscaled(B, 0, 0);
-            B.Dispose();
-        }
-    }
-}
-namespace FlatUI
-{
-    public static class Helpers
-    {
-        public static Color FlatColor = Color.FromArgb(35, 168, 109);
-
-        public static readonly StringFormat NearSF = new StringFormat
-        {
-            Alignment = StringAlignment.Near,
-            LineAlignment = StringAlignment.Near
-        };
-
-        public static readonly StringFormat CenterSF = new StringFormat
-        {
-            Alignment = StringAlignment.Center,
-            LineAlignment = StringAlignment.Center
-        };
-
-        public static GraphicsPath RoundRec(Rectangle Rectangle, int Curve)
-        {
-            GraphicsPath P = new GraphicsPath();
-            int ArcRectangleWidth = Curve * 2;
-            P.AddArc(new Rectangle(Rectangle.X, Rectangle.Y, ArcRectangleWidth, ArcRectangleWidth), -180, 90);
-            P.AddArc(new Rectangle(Rectangle.Width - ArcRectangleWidth + Rectangle.X, Rectangle.Y, ArcRectangleWidth, ArcRectangleWidth), -90, 90);
-            P.AddArc(new Rectangle(Rectangle.Width - ArcRectangleWidth + Rectangle.X, Rectangle.Height - ArcRectangleWidth + Rectangle.Y, ArcRectangleWidth, ArcRectangleWidth), 0, 90);
-            P.AddArc(new Rectangle(Rectangle.X, Rectangle.Height - ArcRectangleWidth + Rectangle.Y, ArcRectangleWidth, ArcRectangleWidth), 90, 90);
-            P.AddLine(new Point(Rectangle.X, Rectangle.Height - ArcRectangleWidth + Rectangle.Y), new Point(Rectangle.X, Curve + Rectangle.Y));
-            return P;
-        }
-
-        public static GraphicsPath RoundRect(float x, float y, float w, float h, double r = 0.3,
-            bool TL = true, bool TR = true, bool BR = true, bool BL = true)
-        {
-            GraphicsPath functionReturnValue = null;
-            float d = Math.Min(w, h) * (float)r;
-            float xw = x + w;
-            float yh = y + h;
-            functionReturnValue = new GraphicsPath();
-
-            var _with1 = functionReturnValue;
-            if (TL)
-                _with1.AddArc(x, y, d, d, 180, 90);
-            else
-                _with1.AddLine(x, y, x, y);
-            if (TR)
-                _with1.AddArc(xw - d, y, d, d, 270, 90);
-            else
-                _with1.AddLine(xw, y, xw, y);
-            if (BR)
-                _with1.AddArc(xw - d, yh - d, d, d, 0, 90);
-            else
-                _with1.AddLine(xw, yh, xw, yh);
-            if (BL)
-                _with1.AddArc(x, yh - d, d, d, 90, 90);
-            else
-                _with1.AddLine(x, yh, x, yh);
-
-            _with1.CloseFigure();
-            return functionReturnValue;
-        }
-
-        //-- Credit: AeonHack
-        public static GraphicsPath DrawArrow(int x, int y, bool flip)
-        {
-            GraphicsPath GP = new GraphicsPath();
-
-            int W = 12;
-            int H = 6;
-
-            if (flip)
-            {
-                GP.AddLine(x + 1, y, x + W + 1, y);
-                GP.AddLine(x + W, y, x + H, y + H - 1);
-            }
-            else
-            {
-                GP.AddLine(x, y + H, x + W, y + H);
-                GP.AddLine(x + W, y + H, x + H, y);
-            }
-
-            GP.CloseFigure();
-            return GP;
-        }
-
-        /// <summary>
-        /// Get the colorscheme of a Control from a parent FormSkin.
-        /// </summary>
-        /// <param name="control">Control</param>
-        /// <returns>Colors</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public static FlatColors GetColors(Control control)
-        {
-            if (control == null)
-                throw new ArgumentNullException();
-
-            FlatColors colors = new FlatColors();
-
-            while (control != null && (control.GetType() != typeof(FormSkin)))
-            {
-                control = control.Parent;
-            }
-
-            if (control != null)
-            {
-                FormSkin skin = (FormSkin)control;
-                colors.Flat = skin.FlatColor;
-            }
-
-            return colors;
-        }
-    }
-}
-namespace FlatUI
-{
-    public enum MouseState : byte
-    {
-        None = 0,
-        Over = 1,
-        Down = 2,
-        Block = 3
-    }
-}
+#endregion
