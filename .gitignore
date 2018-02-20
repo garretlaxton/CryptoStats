@@ -1,5 +1,6 @@
 .vs
 /CryptoStats/bin
 /CryptoStats/obj
-/CryptoStatsInstaller
+/CryptoStatsInstaller/Debug
+/CryptoStatsInstaller/Release
 TODO
