@@ -146,5 +146,10 @@ namespace CryptoStats
             json = json.Replace("]", "");
             return json;
         }
+
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
