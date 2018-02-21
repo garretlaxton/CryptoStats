@@ -31,97 +31,95 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.mainForm = new ModalTheme();
-            // this.minimize = new FlatUI.FlatMini();
-            // this.close = new FlatUI.FlatClose();
             this.grsGroup = new ModalGroupBox();
-            this.grsChange = new ModalLabel();
-            this.grsSupply = new ModalLabel();
-            this.grsVolume = new ModalLabel();
-            this.grsMarketCap = new ModalLabel();
-            this.grsPrice = new ModalLabel();
             this.grsChangeLbl = new ModalLabel();
             this.grsSupplyLbl = new ModalLabel();
             this.grsVolumeLbl = new ModalLabel();
             this.grsPriceLbl = new ModalLabel();
             this.grsMarketCapLbl = new ModalLabel();
             this.adaGroup = new ModalGroupBox();
-            this.adaChange = new ModalLabel();
-            this.adaSupply = new ModalLabel();
-            this.adaVolume = new ModalLabel();
-            this.adaMarketCap = new ModalLabel();
-            this.adaPrice = new ModalLabel();
             this.adaChangeLbl = new ModalLabel();
             this.adaSupplyLbl = new ModalLabel();
             this.adaVolumeLbl = new ModalLabel();
             this.adaPriceLbl = new ModalLabel();
             this.adaMarketCapLbl = new ModalLabel();
             this.navGroup = new ModalGroupBox();
-            this.navChange = new ModalLabel();
-            this.navSupply = new ModalLabel();
-            this.navVolume = new ModalLabel();
-            this.navMarketCap = new ModalLabel();
-            this.navPrice = new ModalLabel();
             this.navChangeLbl = new ModalLabel();
             this.navSupplyLbl = new ModalLabel();
             this.navVolumeLbl = new ModalLabel();
             this.navPriceLbl = new ModalLabel();
             this.navMarketCapLbl = new ModalLabel();
             this.vtcGroup = new ModalGroupBox();
-            this.vtcChange = new ModalLabel();
-            this.vtcSupply = new ModalLabel();
-            this.vtcVolume = new ModalLabel();
-            this.vtcMarketCap = new ModalLabel();
-            this.vtcPrice = new ModalLabel();
             this.vtcChangeLbl = new ModalLabel();
             this.vtcSupplyLbl = new ModalLabel();
             this.vtcVolumeLbl = new ModalLabel();
             this.vtcPriceLbl = new ModalLabel();
             this.vtcMarketCapLbl = new ModalLabel();
             this.xmrGroup = new ModalGroupBox();
-            this.xmrChange = new ModalLabel();
-            this.xmrSupply = new ModalLabel();
-            this.xmrVolume = new ModalLabel();
-            this.xmrMarketCap = new ModalLabel();
-            this.xmrPrice = new ModalLabel();
             this.xmrChangeLbl = new ModalLabel();
             this.xmrSupplyLbl = new ModalLabel();
             this.xmrVolumeLbl = new ModalLabel();
             this.xmrPriceLbl = new ModalLabel();
             this.xmrMarketCapLbl = new ModalLabel();
             this.btcGroup = new ModalGroupBox();
-            this.btcChange = new ModalLabel();
-            this.btcSupply = new ModalLabel();
-            this.btcVolume = new ModalLabel();
-            this.btcMarketCap = new ModalLabel();
-            this.btcPrice = new ModalLabel();
             this.btcChangeLbl = new ModalLabel();
             this.btcSupplyLbl = new ModalLabel();
             this.btcVolumeLbl = new ModalLabel();
             this.btcPriceLbl = new ModalLabel();
             this.btcMarketCapLbl = new ModalLabel();
             this.ethGroup = new ModalGroupBox();
-            this.ethChange = new ModalLabel();
-            this.ethSupply = new ModalLabel();
-            this.ethVolume = new ModalLabel();
-            this.ethMarketCap = new ModalLabel();
-            this.ethPrice = new ModalLabel();
             this.ethChangeLbl = new ModalLabel();
             this.ethSupplyLbl = new ModalLabel();
             this.ethVolumeLbl = new ModalLabel();
             this.ethPriceLbl = new ModalLabel();
             this.ethMarketCapLbl = new ModalLabel();
             this.ltcGroup = new ModalGroupBox();
-            this.ltcChange = new ModalLabel();
-            this.ltcSupply = new ModalLabel();
-            this.ltcVolume = new ModalLabel();
-            this.ltcMarketCap = new ModalLabel();
-            this.ltcPrice = new ModalLabel();
             this.ltcChangeLbl = new ModalLabel();
             this.ltcSupplyLbl = new ModalLabel();
             this.ltcVolumeLbl = new ModalLabel();
             this.ltcPriceLbl = new ModalLabel();
             this.ltcMarketCapLbl = new ModalLabel();
             this.dataTimer = new System.Windows.Forms.Timer(this.components);
+            this.btcPrice = new ModalLabel();
+            this.btcMarketCap = new ModalLabel();
+            this.btcVolume = new ModalLabel();
+            this.btcSupply = new ModalLabel();
+            this.btcChange = new ModalLabel();
+            this.ethChange = new ModalLabel();
+            this.ethSupply = new ModalLabel();
+            this.ethVolume = new ModalLabel();
+            this.ethMarketCap = new ModalLabel();
+            this.ethPrice = new ModalLabel();
+            this.ltcChange = new ModalLabel();
+            this.ltcSupply = new ModalLabel();
+            this.ltcVolume = new ModalLabel();
+            this.ltcMarketCap = new ModalLabel();
+            this.ltcPrice = new ModalLabel();
+            this.adaChange = new ModalLabel();
+            this.adaSupply = new ModalLabel();
+            this.adaVolume = new ModalLabel();
+            this.adaMarketCap = new ModalLabel();
+            this.adaPrice = new ModalLabel();
+            this.xmrChange = new ModalLabel();
+            this.xmrSupply = new ModalLabel();
+            this.xmrVolume = new ModalLabel();
+            this.xmrMarketCap = new ModalLabel();
+            this.xmrPrice = new ModalLabel();
+            this.vtcChange = new ModalLabel();
+            this.vtcSupply = new ModalLabel();
+            this.vtcVolume = new ModalLabel();
+            this.vtcMarketCap = new ModalLabel();
+            this.vtcPrice = new ModalLabel();
+            this.navChange = new ModalLabel();
+            this.navSupply = new ModalLabel();
+            this.navVolume = new ModalLabel();
+            this.navMarketCap = new ModalLabel();
+            this.navPrice = new ModalLabel();
+            this.grsChange = new ModalLabel();
+            this.grsSupply = new ModalLabel();
+            this.grsVolume = new ModalLabel();
+            this.grsMarketCap = new ModalLabel();
+            this.grsPrice = new ModalLabel();
             this.mainForm.SuspendLayout();
             this.grsGroup.SuspendLayout();
             this.adaGroup.SuspendLayout();
@@ -136,58 +134,29 @@
             // mainForm
             // 
             this.mainForm.BackColor = System.Drawing.Color.White;
-            // this.mainForm.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
-            // this.mainForm.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(58)))), ((int)(((byte)(60)))));
-            // this.mainForm.Controls.Add(this.minimize);
-            // this.mainForm.Controls.Add(this.close);
+            this.mainForm.BorderThickness = 1;
             this.mainForm.Controls.Add(this.grsGroup);
             this.mainForm.Controls.Add(this.adaGroup);
             this.mainForm.Controls.Add(this.navGroup);
             this.mainForm.Controls.Add(this.vtcGroup);
             this.mainForm.Controls.Add(this.xmrGroup);
-            this.mainForm.Controls.Add(this.btcGroup);
             this.mainForm.Controls.Add(this.ethGroup);
             this.mainForm.Controls.Add(this.ltcGroup);
+            this.mainForm.Controls.Add(this.btcGroup);
             this.mainForm.Dock = System.Windows.Forms.DockStyle.Fill;
-            // this.mainForm.FlatColor = System.Drawing.Color.White;
             this.mainForm.Font = new System.Drawing.Font("Antraste", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainForm.ForeColor = System.Drawing.SystemColors.ControlText;
-            // this.mainForm.HeaderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(49)))));
-            // this.mainForm.HeaderMaximize = false;
             this.mainForm.Location = new System.Drawing.Point(0, 0);
             this.mainForm.Name = "mainForm";
+            this.mainForm.ShowIcon = false;
             this.mainForm.Size = new System.Drawing.Size(921, 461);
             this.mainForm.TabIndex = 0;
             this.mainForm.Text = "Crypto Stats";
-            // 
-            // minimize
-            // 
-            // this.minimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            // this.minimize.BackColor = System.Drawing.Color.White;
-            // this.minimize.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(49)))));
-            // this.minimize.Font = new System.Drawing.Font("Marlett", 12F);
-            // this.minimize.Location = new System.Drawing.Point(871, 3);
-            // this.minimize.Name = "minimize";
-            // this.minimize.Size = new System.Drawing.Size(18, 18);
-            // this.minimize.TabIndex = 9;
-            // this.minimize.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
-            // 
-            // close
-            // 
-            // this.close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            // this.close.BackColor = System.Drawing.Color.White;
-            // this.close.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            // this.close.Font = new System.Drawing.Font("Marlett", 10F);
-            // this.close.Location = new System.Drawing.Point(895, 4);
-            // this.close.Name = "close";
-            // this.close.Size = new System.Drawing.Size(18, 18);
-            // this.close.TabIndex = 8;
-            // this.close.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
+            this.mainForm.TitleTextPostion = ModalTheme.TitlePostion.Left;
             // 
             // grsGroup
             // 
             this.grsGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.grsGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.grsGroup.Controls.Add(this.grsChange);
             this.grsGroup.Controls.Add(this.grsSupply);
             this.grsGroup.Controls.Add(this.grsVolume);
@@ -200,71 +169,15 @@
             this.grsGroup.Controls.Add(this.grsMarketCapLbl);
             this.grsGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.grsGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.grsGroup.Location = new System.Drawing.Point(687, 249);
             this.grsGroup.Name = "grsGroup";
-            // this.grsGroup.ShowText = true;
             this.grsGroup.Size = new System.Drawing.Size(218, 160);
             this.grsGroup.TabIndex = 7;
             this.grsGroup.Text = "Groestlecoin";
             // 
-            // grsChange
-            // 
-            this.grsChange.AutoSize = true;
-            this.grsChange.BackColor = System.Drawing.Color.Transparent;
-            this.grsChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.grsChange.ForeColor = System.Drawing.Color.White;
-            this.grsChange.Location = new System.Drawing.Point(80, 131);
-            this.grsChange.Name = "grsChange";
-            this.grsChange.Size = new System.Drawing.Size(0, 19);
-            this.grsChange.TabIndex = 12;
-            // 
-            // grsSupply
-            // 
-            this.grsSupply.AutoSize = true;
-            this.grsSupply.BackColor = System.Drawing.Color.Transparent;
-            this.grsSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.grsSupply.ForeColor = System.Drawing.Color.White;
-            this.grsSupply.Location = new System.Drawing.Point(80, 111);
-            this.grsSupply.Name = "grsSupply";
-            this.grsSupply.Size = new System.Drawing.Size(0, 19);
-            this.grsSupply.TabIndex = 11;
-            // 
-            // grsVolume
-            // 
-            this.grsVolume.AutoSize = true;
-            this.grsVolume.BackColor = System.Drawing.Color.Transparent;
-            this.grsVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.grsVolume.ForeColor = System.Drawing.Color.White;
-            this.grsVolume.Location = new System.Drawing.Point(80, 92);
-            this.grsVolume.Name = "grsVolume";
-            this.grsVolume.Size = new System.Drawing.Size(0, 19);
-            this.grsVolume.TabIndex = 10;
-            // 
-            // grsMarketCap
-            // 
-            this.grsMarketCap.AutoSize = true;
-            this.grsMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.grsMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.grsMarketCap.ForeColor = System.Drawing.Color.White;
-            this.grsMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.grsMarketCap.Name = "grsMarketCap";
-            this.grsMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.grsMarketCap.TabIndex = 9;
-            // 
-            // grsPrice
-            // 
-            this.grsPrice.AutoSize = true;
-            this.grsPrice.BackColor = System.Drawing.Color.Transparent;
-            this.grsPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.grsPrice.ForeColor = System.Drawing.Color.White;
-            this.grsPrice.Location = new System.Drawing.Point(80, 51);
-            this.grsPrice.Name = "grsPrice";
-            this.grsPrice.Size = new System.Drawing.Size(0, 19);
-            this.grsPrice.TabIndex = 6;
-            // 
             // grsChangeLbl
             // 
-            this.grsChangeLbl.AutoSize = true;
             this.grsChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.grsChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -276,7 +189,6 @@
             // 
             // grsSupplyLbl
             // 
-            this.grsSupplyLbl.AutoSize = true;
             this.grsSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.grsSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -288,7 +200,6 @@
             // 
             // grsVolumeLbl
             // 
-            this.grsVolumeLbl.AutoSize = true;
             this.grsVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.grsVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -300,7 +211,6 @@
             // 
             // grsPriceLbl
             // 
-            this.grsPriceLbl.AutoSize = true;
             this.grsPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.grsPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -312,7 +222,6 @@
             // 
             // grsMarketCapLbl
             // 
-            this.grsMarketCapLbl.AutoSize = true;
             this.grsMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.grsMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grsMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -325,7 +234,6 @@
             // adaGroup
             // 
             this.adaGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.adaGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.adaGroup.Controls.Add(this.adaChange);
             this.adaGroup.Controls.Add(this.adaSupply);
             this.adaGroup.Controls.Add(this.adaVolume);
@@ -338,71 +246,15 @@
             this.adaGroup.Controls.Add(this.adaMarketCapLbl);
             this.adaGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.adaGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.adaGroup.Location = new System.Drawing.Point(687, 61);
             this.adaGroup.Name = "adaGroup";
-            // this.adaGroup.ShowText = true;
             this.adaGroup.Size = new System.Drawing.Size(218, 160);
             this.adaGroup.TabIndex = 6;
             this.adaGroup.Text = "Cardano";
             // 
-            // adaChange
-            // 
-            this.adaChange.AutoSize = true;
-            this.adaChange.BackColor = System.Drawing.Color.Transparent;
-            this.adaChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.adaChange.ForeColor = System.Drawing.Color.White;
-            this.adaChange.Location = new System.Drawing.Point(80, 132);
-            this.adaChange.Name = "adaChange";
-            this.adaChange.Size = new System.Drawing.Size(0, 19);
-            this.adaChange.TabIndex = 12;
-            // 
-            // adaSupply
-            // 
-            this.adaSupply.AutoSize = true;
-            this.adaSupply.BackColor = System.Drawing.Color.Transparent;
-            this.adaSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.adaSupply.ForeColor = System.Drawing.Color.White;
-            this.adaSupply.Location = new System.Drawing.Point(80, 112);
-            this.adaSupply.Name = "adaSupply";
-            this.adaSupply.Size = new System.Drawing.Size(0, 19);
-            this.adaSupply.TabIndex = 11;
-            // 
-            // adaVolume
-            // 
-            this.adaVolume.AutoSize = true;
-            this.adaVolume.BackColor = System.Drawing.Color.Transparent;
-            this.adaVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.adaVolume.ForeColor = System.Drawing.Color.White;
-            this.adaVolume.Location = new System.Drawing.Point(80, 92);
-            this.adaVolume.Name = "adaVolume";
-            this.adaVolume.Size = new System.Drawing.Size(0, 19);
-            this.adaVolume.TabIndex = 10;
-            // 
-            // adaMarketCap
-            // 
-            this.adaMarketCap.AutoSize = true;
-            this.adaMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.adaMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.adaMarketCap.ForeColor = System.Drawing.Color.White;
-            this.adaMarketCap.Location = new System.Drawing.Point(80, 71);
-            this.adaMarketCap.Name = "adaMarketCap";
-            this.adaMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.adaMarketCap.TabIndex = 9;
-            // 
-            // adaPrice
-            // 
-            this.adaPrice.AutoSize = true;
-            this.adaPrice.BackColor = System.Drawing.Color.Transparent;
-            this.adaPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.adaPrice.ForeColor = System.Drawing.Color.White;
-            this.adaPrice.Location = new System.Drawing.Point(80, 52);
-            this.adaPrice.Name = "adaPrice";
-            this.adaPrice.Size = new System.Drawing.Size(0, 19);
-            this.adaPrice.TabIndex = 6;
-            // 
             // adaChangeLbl
             // 
-            this.adaChangeLbl.AutoSize = true;
             this.adaChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.adaChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -414,7 +266,6 @@
             // 
             // adaSupplyLbl
             // 
-            this.adaSupplyLbl.AutoSize = true;
             this.adaSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.adaSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -426,7 +277,6 @@
             // 
             // adaVolumeLbl
             // 
-            this.adaVolumeLbl.AutoSize = true;
             this.adaVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.adaVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -438,7 +288,6 @@
             // 
             // adaPriceLbl
             // 
-            this.adaPriceLbl.AutoSize = true;
             this.adaPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.adaPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -450,7 +299,6 @@
             // 
             // adaMarketCapLbl
             // 
-            this.adaMarketCapLbl.AutoSize = true;
             this.adaMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.adaMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.adaMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -463,7 +311,6 @@
             // navGroup
             // 
             this.navGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.navGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.navGroup.Controls.Add(this.navChange);
             this.navGroup.Controls.Add(this.navSupply);
             this.navGroup.Controls.Add(this.navVolume);
@@ -476,71 +323,15 @@
             this.navGroup.Controls.Add(this.navMarketCapLbl);
             this.navGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.navGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.navGroup.Location = new System.Drawing.Point(463, 249);
             this.navGroup.Name = "navGroup";
-            // this.navGroup.ShowText = true;
             this.navGroup.Size = new System.Drawing.Size(218, 160);
             this.navGroup.TabIndex = 5;
             this.navGroup.Text = "NAV Coin";
             // 
-            // navChange
-            // 
-            this.navChange.AutoSize = true;
-            this.navChange.BackColor = System.Drawing.Color.Transparent;
-            this.navChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.navChange.ForeColor = System.Drawing.Color.White;
-            this.navChange.Location = new System.Drawing.Point(80, 130);
-            this.navChange.Name = "navChange";
-            this.navChange.Size = new System.Drawing.Size(0, 19);
-            this.navChange.TabIndex = 12;
-            // 
-            // navSupply
-            // 
-            this.navSupply.AutoSize = true;
-            this.navSupply.BackColor = System.Drawing.Color.Transparent;
-            this.navSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.navSupply.ForeColor = System.Drawing.Color.White;
-            this.navSupply.Location = new System.Drawing.Point(80, 111);
-            this.navSupply.Name = "navSupply";
-            this.navSupply.Size = new System.Drawing.Size(0, 19);
-            this.navSupply.TabIndex = 11;
-            // 
-            // navVolume
-            // 
-            this.navVolume.AutoSize = true;
-            this.navVolume.BackColor = System.Drawing.Color.Transparent;
-            this.navVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.navVolume.ForeColor = System.Drawing.Color.White;
-            this.navVolume.Location = new System.Drawing.Point(80, 92);
-            this.navVolume.Name = "navVolume";
-            this.navVolume.Size = new System.Drawing.Size(0, 19);
-            this.navVolume.TabIndex = 10;
-            // 
-            // navMarketCap
-            // 
-            this.navMarketCap.AutoSize = true;
-            this.navMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.navMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.navMarketCap.ForeColor = System.Drawing.Color.White;
-            this.navMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.navMarketCap.Name = "navMarketCap";
-            this.navMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.navMarketCap.TabIndex = 9;
-            // 
-            // navPrice
-            // 
-            this.navPrice.AutoSize = true;
-            this.navPrice.BackColor = System.Drawing.Color.Transparent;
-            this.navPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.navPrice.ForeColor = System.Drawing.Color.White;
-            this.navPrice.Location = new System.Drawing.Point(80, 52);
-            this.navPrice.Name = "navPrice";
-            this.navPrice.Size = new System.Drawing.Size(0, 19);
-            this.navPrice.TabIndex = 6;
-            // 
             // navChangeLbl
             // 
-            this.navChangeLbl.AutoSize = true;
             this.navChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.navChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -552,7 +343,6 @@
             // 
             // navSupplyLbl
             // 
-            this.navSupplyLbl.AutoSize = true;
             this.navSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.navSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -564,7 +354,6 @@
             // 
             // navVolumeLbl
             // 
-            this.navVolumeLbl.AutoSize = true;
             this.navVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.navVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -576,7 +365,6 @@
             // 
             // navPriceLbl
             // 
-            this.navPriceLbl.AutoSize = true;
             this.navPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.navPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -588,7 +376,6 @@
             // 
             // navMarketCapLbl
             // 
-            this.navMarketCapLbl.AutoSize = true;
             this.navMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.navMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.navMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -601,7 +388,6 @@
             // vtcGroup
             // 
             this.vtcGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.vtcGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.vtcGroup.Controls.Add(this.vtcChange);
             this.vtcGroup.Controls.Add(this.vtcSupply);
             this.vtcGroup.Controls.Add(this.vtcVolume);
@@ -614,71 +400,15 @@
             this.vtcGroup.Controls.Add(this.vtcMarketCapLbl);
             this.vtcGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.vtcGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.vtcGroup.Location = new System.Drawing.Point(239, 249);
             this.vtcGroup.Name = "vtcGroup";
-            // this.vtcGroup.ShowText = true;
             this.vtcGroup.Size = new System.Drawing.Size(218, 160);
             this.vtcGroup.TabIndex = 4;
             this.vtcGroup.Text = "Vertcoin";
             // 
-            // vtcChange
-            // 
-            this.vtcChange.AutoSize = true;
-            this.vtcChange.BackColor = System.Drawing.Color.Transparent;
-            this.vtcChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.vtcChange.ForeColor = System.Drawing.Color.White;
-            this.vtcChange.Location = new System.Drawing.Point(80, 131);
-            this.vtcChange.Name = "vtcChange";
-            this.vtcChange.Size = new System.Drawing.Size(0, 19);
-            this.vtcChange.TabIndex = 12;
-            // 
-            // vtcSupply
-            // 
-            this.vtcSupply.AutoSize = true;
-            this.vtcSupply.BackColor = System.Drawing.Color.Transparent;
-            this.vtcSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.vtcSupply.ForeColor = System.Drawing.Color.White;
-            this.vtcSupply.Location = new System.Drawing.Point(80, 111);
-            this.vtcSupply.Name = "vtcSupply";
-            this.vtcSupply.Size = new System.Drawing.Size(0, 19);
-            this.vtcSupply.TabIndex = 11;
-            // 
-            // vtcVolume
-            // 
-            this.vtcVolume.AutoSize = true;
-            this.vtcVolume.BackColor = System.Drawing.Color.Transparent;
-            this.vtcVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.vtcVolume.ForeColor = System.Drawing.Color.White;
-            this.vtcVolume.Location = new System.Drawing.Point(80, 92);
-            this.vtcVolume.Name = "vtcVolume";
-            this.vtcVolume.Size = new System.Drawing.Size(0, 19);
-            this.vtcVolume.TabIndex = 10;
-            // 
-            // vtcMarketCap
-            // 
-            this.vtcMarketCap.AutoSize = true;
-            this.vtcMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.vtcMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.vtcMarketCap.ForeColor = System.Drawing.Color.White;
-            this.vtcMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.vtcMarketCap.Name = "vtcMarketCap";
-            this.vtcMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.vtcMarketCap.TabIndex = 9;
-            // 
-            // vtcPrice
-            // 
-            this.vtcPrice.AutoSize = true;
-            this.vtcPrice.BackColor = System.Drawing.Color.Transparent;
-            this.vtcPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.vtcPrice.ForeColor = System.Drawing.Color.White;
-            this.vtcPrice.Location = new System.Drawing.Point(80, 52);
-            this.vtcPrice.Name = "vtcPrice";
-            this.vtcPrice.Size = new System.Drawing.Size(0, 19);
-            this.vtcPrice.TabIndex = 6;
-            // 
             // vtcChangeLbl
             // 
-            this.vtcChangeLbl.AutoSize = true;
             this.vtcChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.vtcChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -690,7 +420,6 @@
             // 
             // vtcSupplyLbl
             // 
-            this.vtcSupplyLbl.AutoSize = true;
             this.vtcSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.vtcSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -702,7 +431,6 @@
             // 
             // vtcVolumeLbl
             // 
-            this.vtcVolumeLbl.AutoSize = true;
             this.vtcVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.vtcVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -714,7 +442,6 @@
             // 
             // vtcPriceLbl
             // 
-            this.vtcPriceLbl.AutoSize = true;
             this.vtcPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.vtcPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -726,7 +453,6 @@
             // 
             // vtcMarketCapLbl
             // 
-            this.vtcMarketCapLbl.AutoSize = true;
             this.vtcMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.vtcMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.vtcMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -739,7 +465,6 @@
             // xmrGroup
             // 
             this.xmrGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.xmrGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.xmrGroup.Controls.Add(this.xmrChange);
             this.xmrGroup.Controls.Add(this.xmrSupply);
             this.xmrGroup.Controls.Add(this.xmrVolume);
@@ -752,71 +477,15 @@
             this.xmrGroup.Controls.Add(this.xmrMarketCapLbl);
             this.xmrGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.xmrGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.xmrGroup.Location = new System.Drawing.Point(15, 249);
             this.xmrGroup.Name = "xmrGroup";
-            // this.xmrGroup.ShowText = true;
             this.xmrGroup.Size = new System.Drawing.Size(218, 160);
             this.xmrGroup.TabIndex = 3;
             this.xmrGroup.Text = "Monero";
             // 
-            // xmrChange
-            // 
-            this.xmrChange.AutoSize = true;
-            this.xmrChange.BackColor = System.Drawing.Color.Transparent;
-            this.xmrChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.xmrChange.ForeColor = System.Drawing.Color.White;
-            this.xmrChange.Location = new System.Drawing.Point(80, 130);
-            this.xmrChange.Name = "xmrChange";
-            this.xmrChange.Size = new System.Drawing.Size(0, 19);
-            this.xmrChange.TabIndex = 10;
-            // 
-            // xmrSupply
-            // 
-            this.xmrSupply.AutoSize = true;
-            this.xmrSupply.BackColor = System.Drawing.Color.Transparent;
-            this.xmrSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.xmrSupply.ForeColor = System.Drawing.Color.White;
-            this.xmrSupply.Location = new System.Drawing.Point(80, 111);
-            this.xmrSupply.Name = "xmrSupply";
-            this.xmrSupply.Size = new System.Drawing.Size(0, 19);
-            this.xmrSupply.TabIndex = 11;
-            // 
-            // xmrVolume
-            // 
-            this.xmrVolume.AutoSize = true;
-            this.xmrVolume.BackColor = System.Drawing.Color.Transparent;
-            this.xmrVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.xmrVolume.ForeColor = System.Drawing.Color.White;
-            this.xmrVolume.Location = new System.Drawing.Point(79, 92);
-            this.xmrVolume.Name = "xmrVolume";
-            this.xmrVolume.Size = new System.Drawing.Size(0, 19);
-            this.xmrVolume.TabIndex = 10;
-            // 
-            // xmrMarketCap
-            // 
-            this.xmrMarketCap.AutoSize = true;
-            this.xmrMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.xmrMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.xmrMarketCap.ForeColor = System.Drawing.Color.White;
-            this.xmrMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.xmrMarketCap.Name = "xmrMarketCap";
-            this.xmrMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.xmrMarketCap.TabIndex = 9;
-            // 
-            // xmrPrice
-            // 
-            this.xmrPrice.AutoSize = true;
-            this.xmrPrice.BackColor = System.Drawing.Color.Transparent;
-            this.xmrPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.xmrPrice.ForeColor = System.Drawing.Color.White;
-            this.xmrPrice.Location = new System.Drawing.Point(80, 52);
-            this.xmrPrice.Name = "xmrPrice";
-            this.xmrPrice.Size = new System.Drawing.Size(0, 19);
-            this.xmrPrice.TabIndex = 6;
-            // 
             // xmrChangeLbl
             // 
-            this.xmrChangeLbl.AutoSize = true;
             this.xmrChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.xmrChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -828,7 +497,6 @@
             // 
             // xmrSupplyLbl
             // 
-            this.xmrSupplyLbl.AutoSize = true;
             this.xmrSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.xmrSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -840,7 +508,6 @@
             // 
             // xmrVolumeLbl
             // 
-            this.xmrVolumeLbl.AutoSize = true;
             this.xmrVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.xmrVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -852,7 +519,6 @@
             // 
             // xmrPriceLbl
             // 
-            this.xmrPriceLbl.AutoSize = true;
             this.xmrPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.xmrPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -864,7 +530,6 @@
             // 
             // xmrMarketCapLbl
             // 
-            this.xmrMarketCapLbl.AutoSize = true;
             this.xmrMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.xmrMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.xmrMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -877,7 +542,6 @@
             // btcGroup
             // 
             this.btcGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.btcGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.btcGroup.Controls.Add(this.btcChange);
             this.btcGroup.Controls.Add(this.btcSupply);
             this.btcGroup.Controls.Add(this.btcVolume);
@@ -890,71 +554,15 @@
             this.btcGroup.Controls.Add(this.btcMarketCapLbl);
             this.btcGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btcGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.btcGroup.Location = new System.Drawing.Point(15, 61);
             this.btcGroup.Name = "btcGroup";
-            // this.btcGroup.ShowText = true;
             this.btcGroup.Size = new System.Drawing.Size(218, 160);
             this.btcGroup.TabIndex = 0;
             this.btcGroup.Text = "Bitcoin";
             // 
-            // btcChange
-            // 
-            this.btcChange.AutoSize = true;
-            this.btcChange.BackColor = System.Drawing.Color.Transparent;
-            this.btcChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btcChange.ForeColor = System.Drawing.Color.White;
-            this.btcChange.Location = new System.Drawing.Point(79, 132);
-            this.btcChange.Name = "btcChange";
-            this.btcChange.Size = new System.Drawing.Size(0, 19);
-            this.btcChange.TabIndex = 9;
-            // 
-            // btcSupply
-            // 
-            this.btcSupply.AutoSize = true;
-            this.btcSupply.BackColor = System.Drawing.Color.Transparent;
-            this.btcSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btcSupply.ForeColor = System.Drawing.Color.White;
-            this.btcSupply.Location = new System.Drawing.Point(80, 112);
-            this.btcSupply.Name = "btcSupply";
-            this.btcSupply.Size = new System.Drawing.Size(0, 19);
-            this.btcSupply.TabIndex = 8;
-            // 
-            // btcVolume
-            // 
-            this.btcVolume.AutoSize = true;
-            this.btcVolume.BackColor = System.Drawing.Color.Transparent;
-            this.btcVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btcVolume.ForeColor = System.Drawing.Color.White;
-            this.btcVolume.Location = new System.Drawing.Point(79, 92);
-            this.btcVolume.Name = "btcVolume";
-            this.btcVolume.Size = new System.Drawing.Size(0, 19);
-            this.btcVolume.TabIndex = 7;
-            // 
-            // btcMarketCap
-            // 
-            this.btcMarketCap.AutoSize = true;
-            this.btcMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.btcMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btcMarketCap.ForeColor = System.Drawing.Color.White;
-            this.btcMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.btcMarketCap.Name = "btcMarketCap";
-            this.btcMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.btcMarketCap.TabIndex = 6;
-            // 
-            // btcPrice
-            // 
-            this.btcPrice.AutoSize = true;
-            this.btcPrice.BackColor = System.Drawing.Color.Transparent;
-            this.btcPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btcPrice.ForeColor = System.Drawing.Color.White;
-            this.btcPrice.Location = new System.Drawing.Point(80, 52);
-            this.btcPrice.Name = "btcPrice";
-            this.btcPrice.Size = new System.Drawing.Size(0, 19);
-            this.btcPrice.TabIndex = 5;
-            // 
             // btcChangeLbl
             // 
-            this.btcChangeLbl.AutoSize = true;
             this.btcChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.btcChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -966,7 +574,6 @@
             // 
             // btcSupplyLbl
             // 
-            this.btcSupplyLbl.AutoSize = true;
             this.btcSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.btcSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -978,7 +585,6 @@
             // 
             // btcVolumeLbl
             // 
-            this.btcVolumeLbl.AutoSize = true;
             this.btcVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.btcVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -990,7 +596,6 @@
             // 
             // btcPriceLbl
             // 
-            this.btcPriceLbl.AutoSize = true;
             this.btcPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.btcPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -1002,7 +607,6 @@
             // 
             // btcMarketCapLbl
             // 
-            this.btcMarketCapLbl.AutoSize = true;
             this.btcMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.btcMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btcMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -1015,7 +619,6 @@
             // ethGroup
             // 
             this.ethGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.ethGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.ethGroup.Controls.Add(this.ethChange);
             this.ethGroup.Controls.Add(this.ethSupply);
             this.ethGroup.Controls.Add(this.ethVolume);
@@ -1028,71 +631,15 @@
             this.ethGroup.Controls.Add(this.ethMarketCapLbl);
             this.ethGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ethGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.ethGroup.Location = new System.Drawing.Point(239, 61);
             this.ethGroup.Name = "ethGroup";
-            // this.ethGroup.ShowText = true;
             this.ethGroup.Size = new System.Drawing.Size(218, 160);
             this.ethGroup.TabIndex = 1;
             this.ethGroup.Text = "Ethereum";
             // 
-            // ethChange
-            // 
-            this.ethChange.AutoSize = true;
-            this.ethChange.BackColor = System.Drawing.Color.Transparent;
-            this.ethChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ethChange.ForeColor = System.Drawing.Color.White;
-            this.ethChange.Location = new System.Drawing.Point(80, 131);
-            this.ethChange.Name = "ethChange";
-            this.ethChange.Size = new System.Drawing.Size(0, 19);
-            this.ethChange.TabIndex = 10;
-            // 
-            // ethSupply
-            // 
-            this.ethSupply.AutoSize = true;
-            this.ethSupply.BackColor = System.Drawing.Color.Transparent;
-            this.ethSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ethSupply.ForeColor = System.Drawing.Color.White;
-            this.ethSupply.Location = new System.Drawing.Point(80, 112);
-            this.ethSupply.Name = "ethSupply";
-            this.ethSupply.Size = new System.Drawing.Size(0, 19);
-            this.ethSupply.TabIndex = 9;
-            // 
-            // ethVolume
-            // 
-            this.ethVolume.AutoSize = true;
-            this.ethVolume.BackColor = System.Drawing.Color.Transparent;
-            this.ethVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ethVolume.ForeColor = System.Drawing.Color.White;
-            this.ethVolume.Location = new System.Drawing.Point(80, 92);
-            this.ethVolume.Name = "ethVolume";
-            this.ethVolume.Size = new System.Drawing.Size(0, 19);
-            this.ethVolume.TabIndex = 8;
-            // 
-            // ethMarketCap
-            // 
-            this.ethMarketCap.AutoSize = true;
-            this.ethMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.ethMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ethMarketCap.ForeColor = System.Drawing.Color.White;
-            this.ethMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.ethMarketCap.Name = "ethMarketCap";
-            this.ethMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.ethMarketCap.TabIndex = 7;
-            // 
-            // ethPrice
-            // 
-            this.ethPrice.AutoSize = true;
-            this.ethPrice.BackColor = System.Drawing.Color.Transparent;
-            this.ethPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ethPrice.ForeColor = System.Drawing.Color.White;
-            this.ethPrice.Location = new System.Drawing.Point(80, 52);
-            this.ethPrice.Name = "ethPrice";
-            this.ethPrice.Size = new System.Drawing.Size(0, 19);
-            this.ethPrice.TabIndex = 6;
-            // 
             // ethChangeLbl
             // 
-            this.ethChangeLbl.AutoSize = true;
             this.ethChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.ethChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -1104,7 +651,6 @@
             // 
             // ethSupplyLbl
             // 
-            this.ethSupplyLbl.AutoSize = true;
             this.ethSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.ethSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -1116,7 +662,6 @@
             // 
             // ethVolumeLbl
             // 
-            this.ethVolumeLbl.AutoSize = true;
             this.ethVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.ethVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -1128,7 +673,6 @@
             // 
             // ethPriceLbl
             // 
-            this.ethPriceLbl.AutoSize = true;
             this.ethPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.ethPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -1140,7 +684,6 @@
             // 
             // ethMarketCapLbl
             // 
-            this.ethMarketCapLbl.AutoSize = true;
             this.ethMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.ethMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ethMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -1153,7 +696,6 @@
             // ltcGroup
             // 
             this.ltcGroup.BackColor = System.Drawing.Color.Transparent;
-            // this.ltcGroup.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(70)))), ((int)(((byte)(73)))));
             this.ltcGroup.Controls.Add(this.ltcChange);
             this.ltcGroup.Controls.Add(this.ltcSupply);
             this.ltcGroup.Controls.Add(this.ltcVolume);
@@ -1166,71 +708,15 @@
             this.ltcGroup.Controls.Add(this.ltcMarketCapLbl);
             this.ltcGroup.Font = new System.Drawing.Font("Antraste", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcGroup.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ltcGroup.GroupBoxStyle = ModalGroupBox.Style.I;
             this.ltcGroup.Location = new System.Drawing.Point(463, 61);
             this.ltcGroup.Name = "ltcGroup";
-            // this.ltcGroup.ShowText = true;
             this.ltcGroup.Size = new System.Drawing.Size(218, 160);
             this.ltcGroup.TabIndex = 2;
             this.ltcGroup.Text = "Litecoin";
             // 
-            // ltcChange
-            // 
-            this.ltcChange.AutoSize = true;
-            this.ltcChange.BackColor = System.Drawing.Color.Transparent;
-            this.ltcChange.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ltcChange.ForeColor = System.Drawing.Color.White;
-            this.ltcChange.Location = new System.Drawing.Point(80, 131);
-            this.ltcChange.Name = "ltcChange";
-            this.ltcChange.Size = new System.Drawing.Size(0, 19);
-            this.ltcChange.TabIndex = 11;
-            // 
-            // ltcSupply
-            // 
-            this.ltcSupply.AutoSize = true;
-            this.ltcSupply.BackColor = System.Drawing.Color.Transparent;
-            this.ltcSupply.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ltcSupply.ForeColor = System.Drawing.Color.White;
-            this.ltcSupply.Location = new System.Drawing.Point(80, 112);
-            this.ltcSupply.Name = "ltcSupply";
-            this.ltcSupply.Size = new System.Drawing.Size(0, 19);
-            this.ltcSupply.TabIndex = 10;
-            // 
-            // ltcVolume
-            // 
-            this.ltcVolume.AutoSize = true;
-            this.ltcVolume.BackColor = System.Drawing.Color.Transparent;
-            this.ltcVolume.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ltcVolume.ForeColor = System.Drawing.Color.White;
-            this.ltcVolume.Location = new System.Drawing.Point(80, 92);
-            this.ltcVolume.Name = "ltcVolume";
-            this.ltcVolume.Size = new System.Drawing.Size(0, 19);
-            this.ltcVolume.TabIndex = 9;
-            // 
-            // ltcMarketCap
-            // 
-            this.ltcMarketCap.AutoSize = true;
-            this.ltcMarketCap.BackColor = System.Drawing.Color.Transparent;
-            this.ltcMarketCap.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ltcMarketCap.ForeColor = System.Drawing.Color.White;
-            this.ltcMarketCap.Location = new System.Drawing.Point(80, 72);
-            this.ltcMarketCap.Name = "ltcMarketCap";
-            this.ltcMarketCap.Size = new System.Drawing.Size(0, 19);
-            this.ltcMarketCap.TabIndex = 8;
-            // 
-            // ltcPrice
-            // 
-            this.ltcPrice.AutoSize = true;
-            this.ltcPrice.BackColor = System.Drawing.Color.Transparent;
-            this.ltcPrice.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.ltcPrice.ForeColor = System.Drawing.Color.White;
-            this.ltcPrice.Location = new System.Drawing.Point(80, 51);
-            this.ltcPrice.Name = "ltcPrice";
-            this.ltcPrice.Size = new System.Drawing.Size(0, 19);
-            this.ltcPrice.TabIndex = 6;
-            // 
             // ltcChangeLbl
             // 
-            this.ltcChangeLbl.AutoSize = true;
             this.ltcChangeLbl.BackColor = System.Drawing.Color.Transparent;
             this.ltcChangeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcChangeLbl.ForeColor = System.Drawing.Color.White;
@@ -1242,7 +728,6 @@
             // 
             // ltcSupplyLbl
             // 
-            this.ltcSupplyLbl.AutoSize = true;
             this.ltcSupplyLbl.BackColor = System.Drawing.Color.Transparent;
             this.ltcSupplyLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcSupplyLbl.ForeColor = System.Drawing.Color.White;
@@ -1254,7 +739,6 @@
             // 
             // ltcVolumeLbl
             // 
-            this.ltcVolumeLbl.AutoSize = true;
             this.ltcVolumeLbl.BackColor = System.Drawing.Color.Transparent;
             this.ltcVolumeLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcVolumeLbl.ForeColor = System.Drawing.Color.White;
@@ -1266,7 +750,6 @@
             // 
             // ltcPriceLbl
             // 
-            this.ltcPriceLbl.AutoSize = true;
             this.ltcPriceLbl.BackColor = System.Drawing.Color.Transparent;
             this.ltcPriceLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcPriceLbl.ForeColor = System.Drawing.Color.White;
@@ -1278,7 +761,6 @@
             // 
             // ltcMarketCapLbl
             // 
-            this.ltcMarketCapLbl.AutoSize = true;
             this.ltcMarketCapLbl.BackColor = System.Drawing.Color.Transparent;
             this.ltcMarketCapLbl.Font = new System.Drawing.Font("Antraste", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ltcMarketCapLbl.ForeColor = System.Drawing.Color.White;
@@ -1291,6 +773,406 @@
             // dataTimer
             // 
             this.dataTimer.Interval = 300000;
+            // 
+            // btcPrice
+            // 
+            this.btcPrice.BackColor = System.Drawing.Color.Transparent;
+            this.btcPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btcPrice.Location = new System.Drawing.Point(80, 50);
+            this.btcPrice.Name = "btcPrice";
+            this.btcPrice.Size = new System.Drawing.Size(125, 23);
+            this.btcPrice.TabIndex = 5;
+            this.btcPrice.Text = "$100,000.00";
+            // 
+            // btcMarketCap
+            // 
+            this.btcMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.btcMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btcMarketCap.Location = new System.Drawing.Point(79, 70);
+            this.btcMarketCap.Name = "btcMarketCap";
+            this.btcMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.btcMarketCap.TabIndex = 6;
+            this.btcMarketCap.Text = "$100,000.00";
+            // 
+            // btcVolume
+            // 
+            this.btcVolume.BackColor = System.Drawing.Color.Transparent;
+            this.btcVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btcVolume.Location = new System.Drawing.Point(80, 90);
+            this.btcVolume.Name = "btcVolume";
+            this.btcVolume.Size = new System.Drawing.Size(125, 17);
+            this.btcVolume.TabIndex = 7;
+            this.btcVolume.Text = "$100,000.00";
+            // 
+            // btcSupply
+            // 
+            this.btcSupply.BackColor = System.Drawing.Color.Transparent;
+            this.btcSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btcSupply.Location = new System.Drawing.Point(79, 110);
+            this.btcSupply.Name = "btcSupply";
+            this.btcSupply.Size = new System.Drawing.Size(125, 17);
+            this.btcSupply.TabIndex = 8;
+            this.btcSupply.Text = "$100,000.00";
+            // 
+            // btcChange
+            // 
+            this.btcChange.BackColor = System.Drawing.Color.Transparent;
+            this.btcChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btcChange.Location = new System.Drawing.Point(79, 130);
+            this.btcChange.Name = "btcChange";
+            this.btcChange.Size = new System.Drawing.Size(125, 17);
+            this.btcChange.TabIndex = 9;
+            this.btcChange.Text = "$100,000.00";
+            // 
+            // ethChange
+            // 
+            this.ethChange.BackColor = System.Drawing.Color.Transparent;
+            this.ethChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ethChange.Location = new System.Drawing.Point(79, 132);
+            this.ethChange.Name = "ethChange";
+            this.ethChange.Size = new System.Drawing.Size(125, 17);
+            this.ethChange.TabIndex = 14;
+            this.ethChange.Text = "$100,000.00";
+            // 
+            // ethSupply
+            // 
+            this.ethSupply.BackColor = System.Drawing.Color.Transparent;
+            this.ethSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ethSupply.Location = new System.Drawing.Point(79, 112);
+            this.ethSupply.Name = "ethSupply";
+            this.ethSupply.Size = new System.Drawing.Size(125, 17);
+            this.ethSupply.TabIndex = 13;
+            this.ethSupply.Text = "$100,000.00";
+            // 
+            // ethVolume
+            // 
+            this.ethVolume.BackColor = System.Drawing.Color.Transparent;
+            this.ethVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ethVolume.Location = new System.Drawing.Point(80, 92);
+            this.ethVolume.Name = "ethVolume";
+            this.ethVolume.Size = new System.Drawing.Size(125, 17);
+            this.ethVolume.TabIndex = 12;
+            this.ethVolume.Text = "$100,000.00";
+            // 
+            // ethMarketCap
+            // 
+            this.ethMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.ethMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ethMarketCap.Location = new System.Drawing.Point(79, 72);
+            this.ethMarketCap.Name = "ethMarketCap";
+            this.ethMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.ethMarketCap.TabIndex = 11;
+            this.ethMarketCap.Text = "$100,000.00";
+            // 
+            // ethPrice
+            // 
+            this.ethPrice.BackColor = System.Drawing.Color.Transparent;
+            this.ethPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ethPrice.Location = new System.Drawing.Point(80, 52);
+            this.ethPrice.Name = "ethPrice";
+            this.ethPrice.Size = new System.Drawing.Size(125, 17);
+            this.ethPrice.TabIndex = 10;
+            this.ethPrice.Text = "$100,000.00";
+            // 
+            // ltcChange
+            // 
+            this.ltcChange.BackColor = System.Drawing.Color.Transparent;
+            this.ltcChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ltcChange.Location = new System.Drawing.Point(79, 132);
+            this.ltcChange.Name = "ltcChange";
+            this.ltcChange.Size = new System.Drawing.Size(125, 17);
+            this.ltcChange.TabIndex = 14;
+            this.ltcChange.Text = "$100,000.00";
+            // 
+            // ltcSupply
+            // 
+            this.ltcSupply.BackColor = System.Drawing.Color.Transparent;
+            this.ltcSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ltcSupply.Location = new System.Drawing.Point(79, 112);
+            this.ltcSupply.Name = "ltcSupply";
+            this.ltcSupply.Size = new System.Drawing.Size(125, 17);
+            this.ltcSupply.TabIndex = 13;
+            this.ltcSupply.Text = "$100,000.00";
+            // 
+            // ltcVolume
+            // 
+            this.ltcVolume.BackColor = System.Drawing.Color.Transparent;
+            this.ltcVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ltcVolume.Location = new System.Drawing.Point(80, 92);
+            this.ltcVolume.Name = "ltcVolume";
+            this.ltcVolume.Size = new System.Drawing.Size(125, 17);
+            this.ltcVolume.TabIndex = 12;
+            this.ltcVolume.Text = "$100,000.00";
+            // 
+            // ltcMarketCap
+            // 
+            this.ltcMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.ltcMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ltcMarketCap.Location = new System.Drawing.Point(79, 72);
+            this.ltcMarketCap.Name = "ltcMarketCap";
+            this.ltcMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.ltcMarketCap.TabIndex = 11;
+            this.ltcMarketCap.Text = "$100,000.00";
+            // 
+            // ltcPrice
+            // 
+            this.ltcPrice.BackColor = System.Drawing.Color.Transparent;
+            this.ltcPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ltcPrice.Location = new System.Drawing.Point(80, 52);
+            this.ltcPrice.Name = "ltcPrice";
+            this.ltcPrice.Size = new System.Drawing.Size(125, 17);
+            this.ltcPrice.TabIndex = 10;
+            this.ltcPrice.Text = "$100,000.00";
+            // 
+            // adaChange
+            // 
+            this.adaChange.BackColor = System.Drawing.Color.Transparent;
+            this.adaChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adaChange.Location = new System.Drawing.Point(79, 132);
+            this.adaChange.Name = "adaChange";
+            this.adaChange.Size = new System.Drawing.Size(125, 17);
+            this.adaChange.TabIndex = 14;
+            this.adaChange.Text = "$100,000.00";
+            // 
+            // adaSupply
+            // 
+            this.adaSupply.BackColor = System.Drawing.Color.Transparent;
+            this.adaSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adaSupply.Location = new System.Drawing.Point(79, 112);
+            this.adaSupply.Name = "adaSupply";
+            this.adaSupply.Size = new System.Drawing.Size(125, 17);
+            this.adaSupply.TabIndex = 13;
+            this.adaSupply.Text = "$100,000.00";
+            // 
+            // adaVolume
+            // 
+            this.adaVolume.BackColor = System.Drawing.Color.Transparent;
+            this.adaVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adaVolume.Location = new System.Drawing.Point(80, 92);
+            this.adaVolume.Name = "adaVolume";
+            this.adaVolume.Size = new System.Drawing.Size(125, 17);
+            this.adaVolume.TabIndex = 12;
+            this.adaVolume.Text = "$100,000.00";
+            // 
+            // adaMarketCap
+            // 
+            this.adaMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.adaMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adaMarketCap.Location = new System.Drawing.Point(79, 72);
+            this.adaMarketCap.Name = "adaMarketCap";
+            this.adaMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.adaMarketCap.TabIndex = 11;
+            this.adaMarketCap.Text = "$100,000.00";
+            // 
+            // adaPrice
+            // 
+            this.adaPrice.BackColor = System.Drawing.Color.Transparent;
+            this.adaPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adaPrice.Location = new System.Drawing.Point(80, 52);
+            this.adaPrice.Name = "adaPrice";
+            this.adaPrice.Size = new System.Drawing.Size(125, 17);
+            this.adaPrice.TabIndex = 10;
+            this.adaPrice.Text = "$100,000.00";
+            // 
+            // xmrChange
+            // 
+            this.xmrChange.BackColor = System.Drawing.Color.Transparent;
+            this.xmrChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmrChange.Location = new System.Drawing.Point(78, 132);
+            this.xmrChange.Name = "xmrChange";
+            this.xmrChange.Size = new System.Drawing.Size(125, 17);
+            this.xmrChange.TabIndex = 14;
+            this.xmrChange.Text = "$100,000.00";
+            // 
+            // xmrSupply
+            // 
+            this.xmrSupply.BackColor = System.Drawing.Color.Transparent;
+            this.xmrSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmrSupply.Location = new System.Drawing.Point(78, 112);
+            this.xmrSupply.Name = "xmrSupply";
+            this.xmrSupply.Size = new System.Drawing.Size(125, 17);
+            this.xmrSupply.TabIndex = 13;
+            this.xmrSupply.Text = "$100,000.00";
+            // 
+            // xmrVolume
+            // 
+            this.xmrVolume.BackColor = System.Drawing.Color.Transparent;
+            this.xmrVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmrVolume.Location = new System.Drawing.Point(79, 92);
+            this.xmrVolume.Name = "xmrVolume";
+            this.xmrVolume.Size = new System.Drawing.Size(125, 17);
+            this.xmrVolume.TabIndex = 12;
+            this.xmrVolume.Text = "$100,000.00";
+            // 
+            // xmrMarketCap
+            // 
+            this.xmrMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.xmrMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmrMarketCap.Location = new System.Drawing.Point(78, 72);
+            this.xmrMarketCap.Name = "xmrMarketCap";
+            this.xmrMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.xmrMarketCap.TabIndex = 11;
+            this.xmrMarketCap.Text = "$100,000.00";
+            // 
+            // xmrPrice
+            // 
+            this.xmrPrice.BackColor = System.Drawing.Color.Transparent;
+            this.xmrPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xmrPrice.Location = new System.Drawing.Point(79, 52);
+            this.xmrPrice.Name = "xmrPrice";
+            this.xmrPrice.Size = new System.Drawing.Size(125, 17);
+            this.xmrPrice.TabIndex = 10;
+            this.xmrPrice.Text = "$100,000.00";
+            // 
+            // vtcChange
+            // 
+            this.vtcChange.BackColor = System.Drawing.Color.Transparent;
+            this.vtcChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vtcChange.Location = new System.Drawing.Point(78, 132);
+            this.vtcChange.Name = "vtcChange";
+            this.vtcChange.Size = new System.Drawing.Size(125, 17);
+            this.vtcChange.TabIndex = 14;
+            this.vtcChange.Text = "$100,000.00";
+            // 
+            // vtcSupply
+            // 
+            this.vtcSupply.BackColor = System.Drawing.Color.Transparent;
+            this.vtcSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vtcSupply.Location = new System.Drawing.Point(78, 112);
+            this.vtcSupply.Name = "vtcSupply";
+            this.vtcSupply.Size = new System.Drawing.Size(125, 17);
+            this.vtcSupply.TabIndex = 13;
+            this.vtcSupply.Text = "$100,000.00";
+            // 
+            // vtcVolume
+            // 
+            this.vtcVolume.BackColor = System.Drawing.Color.Transparent;
+            this.vtcVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vtcVolume.Location = new System.Drawing.Point(79, 92);
+            this.vtcVolume.Name = "vtcVolume";
+            this.vtcVolume.Size = new System.Drawing.Size(125, 17);
+            this.vtcVolume.TabIndex = 12;
+            this.vtcVolume.Text = "$100,000.00";
+            // 
+            // vtcMarketCap
+            // 
+            this.vtcMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.vtcMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vtcMarketCap.Location = new System.Drawing.Point(78, 72);
+            this.vtcMarketCap.Name = "vtcMarketCap";
+            this.vtcMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.vtcMarketCap.TabIndex = 11;
+            this.vtcMarketCap.Text = "$100,000.00";
+            // 
+            // vtcPrice
+            // 
+            this.vtcPrice.BackColor = System.Drawing.Color.Transparent;
+            this.vtcPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vtcPrice.Location = new System.Drawing.Point(79, 52);
+            this.vtcPrice.Name = "vtcPrice";
+            this.vtcPrice.Size = new System.Drawing.Size(125, 17);
+            this.vtcPrice.TabIndex = 10;
+            this.vtcPrice.Text = "$100,000.00";
+            // 
+            // navChange
+            // 
+            this.navChange.BackColor = System.Drawing.Color.Transparent;
+            this.navChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.navChange.Location = new System.Drawing.Point(79, 132);
+            this.navChange.Name = "navChange";
+            this.navChange.Size = new System.Drawing.Size(125, 17);
+            this.navChange.TabIndex = 14;
+            this.navChange.Text = "$100,000.00";
+            // 
+            // navSupply
+            // 
+            this.navSupply.BackColor = System.Drawing.Color.Transparent;
+            this.navSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.navSupply.Location = new System.Drawing.Point(79, 112);
+            this.navSupply.Name = "navSupply";
+            this.navSupply.Size = new System.Drawing.Size(125, 17);
+            this.navSupply.TabIndex = 13;
+            this.navSupply.Text = "$100,000.00";
+            // 
+            // navVolume
+            // 
+            this.navVolume.BackColor = System.Drawing.Color.Transparent;
+            this.navVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.navVolume.Location = new System.Drawing.Point(80, 92);
+            this.navVolume.Name = "navVolume";
+            this.navVolume.Size = new System.Drawing.Size(125, 17);
+            this.navVolume.TabIndex = 12;
+            this.navVolume.Text = "$100,000.00";
+            // 
+            // navMarketCap
+            // 
+            this.navMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.navMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.navMarketCap.Location = new System.Drawing.Point(79, 72);
+            this.navMarketCap.Name = "navMarketCap";
+            this.navMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.navMarketCap.TabIndex = 11;
+            this.navMarketCap.Text = "$100,000.00";
+            // 
+            // navPrice
+            // 
+            this.navPrice.BackColor = System.Drawing.Color.Transparent;
+            this.navPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.navPrice.Location = new System.Drawing.Point(80, 52);
+            this.navPrice.Name = "navPrice";
+            this.navPrice.Size = new System.Drawing.Size(125, 17);
+            this.navPrice.TabIndex = 10;
+            this.navPrice.Text = "$100,000.00";
+            // 
+            // grsChange
+            // 
+            this.grsChange.BackColor = System.Drawing.Color.Transparent;
+            this.grsChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grsChange.Location = new System.Drawing.Point(79, 132);
+            this.grsChange.Name = "grsChange";
+            this.grsChange.Size = new System.Drawing.Size(125, 17);
+            this.grsChange.TabIndex = 14;
+            this.grsChange.Text = "$100,000.00";
+            // 
+            // grsSupply
+            // 
+            this.grsSupply.BackColor = System.Drawing.Color.Transparent;
+            this.grsSupply.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grsSupply.Location = new System.Drawing.Point(79, 112);
+            this.grsSupply.Name = "grsSupply";
+            this.grsSupply.Size = new System.Drawing.Size(125, 17);
+            this.grsSupply.TabIndex = 13;
+            this.grsSupply.Text = "$100,000.00";
+            // 
+            // grsVolume
+            // 
+            this.grsVolume.BackColor = System.Drawing.Color.Transparent;
+            this.grsVolume.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grsVolume.Location = new System.Drawing.Point(80, 92);
+            this.grsVolume.Name = "grsVolume";
+            this.grsVolume.Size = new System.Drawing.Size(125, 17);
+            this.grsVolume.TabIndex = 12;
+            this.grsVolume.Text = "$100,000.00";
+            // 
+            // grsMarketCap
+            // 
+            this.grsMarketCap.BackColor = System.Drawing.Color.Transparent;
+            this.grsMarketCap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grsMarketCap.Location = new System.Drawing.Point(79, 72);
+            this.grsMarketCap.Name = "grsMarketCap";
+            this.grsMarketCap.Size = new System.Drawing.Size(125, 17);
+            this.grsMarketCap.TabIndex = 11;
+            this.grsMarketCap.Text = "$100,000.00";
+            // 
+            // grsPrice
+            // 
+            this.grsPrice.BackColor = System.Drawing.Color.Transparent;
+            this.grsPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grsPrice.Location = new System.Drawing.Point(80, 52);
+            this.grsPrice.Name = "grsPrice";
+            this.grsPrice.Size = new System.Drawing.Size(125, 17);
+            this.grsPrice.TabIndex = 10;
+            this.grsPrice.Text = "$100,000.00";
             // 
             // Main
             // 
@@ -1375,48 +1257,46 @@
         private ModalLabel adaVolumeLbl;
         private ModalLabel adaPriceLbl;
         private ModalLabel adaMarketCapLbl;
-        // private FlatUI.FlatClose close;
-        // private FlatUI.FlatMini minimize;
+        private System.Windows.Forms.Timer dataTimer;
         private ModalLabel btcPrice;
-        private ModalLabel ethPrice;
-        private ModalLabel grsPrice;
-        private ModalLabel adaPrice;
-        private ModalLabel navPrice;
-        private ModalLabel vtcPrice;
-        private ModalLabel xmrPrice;
-        private ModalLabel ltcPrice;
         private ModalLabel btcChange;
         private ModalLabel btcSupply;
         private ModalLabel btcVolume;
         private ModalLabel btcMarketCap;
+        private ModalLabel grsChange;
         private ModalLabel grsSupply;
         private ModalLabel grsVolume;
         private ModalLabel grsMarketCap;
+        private ModalLabel grsPrice;
+        private ModalLabel adaChange;
         private ModalLabel adaSupply;
         private ModalLabel adaVolume;
         private ModalLabel adaMarketCap;
+        private ModalLabel adaPrice;
+        private ModalLabel navChange;
         private ModalLabel navSupply;
         private ModalLabel navVolume;
         private ModalLabel navMarketCap;
+        private ModalLabel navPrice;
+        private ModalLabel vtcChange;
         private ModalLabel vtcSupply;
         private ModalLabel vtcVolume;
         private ModalLabel vtcMarketCap;
+        private ModalLabel vtcPrice;
+        private ModalLabel xmrChange;
         private ModalLabel xmrSupply;
         private ModalLabel xmrVolume;
         private ModalLabel xmrMarketCap;
+        private ModalLabel xmrPrice;
+        private ModalLabel ethChange;
         private ModalLabel ethSupply;
         private ModalLabel ethVolume;
         private ModalLabel ethMarketCap;
+        private ModalLabel ethPrice;
+        private ModalLabel ltcChange;
         private ModalLabel ltcSupply;
         private ModalLabel ltcVolume;
         private ModalLabel ltcMarketCap;
-        private ModalLabel grsChange;
-        private ModalLabel adaChange;
-        private ModalLabel navChange;
-        private ModalLabel vtcChange;
-        private ModalLabel xmrChange;
-        private ModalLabel ethChange;
-        private ModalLabel ltcChange;
-        private System.Windows.Forms.Timer dataTimer;
+        private ModalLabel ltcPrice;
     }
 }
