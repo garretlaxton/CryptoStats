@@ -151,5 +151,11 @@ namespace CryptoStats
         {
             this.Close();
         }
+
+        private void aboutButton_Click(object sender, EventArgs e)
+        {
+            About aboutForm = new About();
+            aboutForm.ShowDialog();
+        }
     }
 }

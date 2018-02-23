@@ -122,6 +122,7 @@
             this.btcPriceLbl = new ModalLabel();
             this.btcMarketCapLbl = new ModalLabel();
             this.dataTimer = new System.Windows.Forms.Timer(this.components);
+            this.aboutButton = new ModalButton();
             this.mainForm.SuspendLayout();
             this.navGroup.SuspendLayout();
             this.grsGroup.SuspendLayout();
@@ -137,6 +138,7 @@
             // 
             this.mainForm.BackColor = System.Drawing.Color.White;
             this.mainForm.BorderThickness = 1;
+            this.mainForm.Controls.Add(this.aboutButton);
             this.mainForm.Controls.Add(this.closeButton);
             this.mainForm.Controls.Add(this.close);
             this.mainForm.Controls.Add(this.navGroup);
@@ -1160,6 +1162,17 @@
             // 
             this.dataTimer.Interval = 300000;
             // 
+            // aboutButton
+            // 
+            this.aboutButton.BackColor = System.Drawing.Color.Transparent;
+            this.aboutButton.Font = new System.Drawing.Font("Candara", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aboutButton.Location = new System.Drawing.Point(752, 425);
+            this.aboutButton.Name = "aboutButton";
+            this.aboutButton.Size = new System.Drawing.Size(75, 29);
+            this.aboutButton.TabIndex = 15;
+            this.aboutButton.Text = "About";
+            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1278,5 +1291,6 @@
         private ModalLabel ethMarketCapLbl;
         private ModalControlButton close;
         private ModalButton closeButton;
+        private ModalButton aboutButton;
     }
 }
