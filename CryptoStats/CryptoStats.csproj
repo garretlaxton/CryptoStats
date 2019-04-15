@@ -54,7 +54,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>16E882BB0973C1FCBD74A39F2C6492948D9F75CC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>74CD96BC4B48F29B3642F171C90074AA8A0B625B</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>CryptoStats_TemporaryKey.pfx</ManifestKeyFile>
