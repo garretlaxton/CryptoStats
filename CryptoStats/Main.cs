@@ -26,15 +26,15 @@ namespace CryptoStats
         [Serializable]
         public class data
         {
-            [JsonProperty("price_usd")]
+            [JsonProperty("price")]
             public float price_usd { get; set; }
-            [JsonProperty("market_cap_usd")]
+            [JsonProperty("market_cap")]
             public double market_cap_usd { get; set; }
-            [JsonProperty("24h_volume_usd")]
+            [JsonProperty("volume")]
             public float day_volume_usd { get; set; }
-            [JsonProperty("available_supply")]
+            [JsonProperty("supply")]
             public double available_supply { get; set; }
-            [JsonProperty("percent_change_24h")]
+            [JsonProperty("cap24hrChange")]
             public float percent_change_24h { get; set; }
         }
 
@@ -49,14 +49,14 @@ namespace CryptoStats
             {
                 using (WebClient client = new WebClient())
                 {
-                    string btcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/bitcoin/");
-                    string ethJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/ethereum/");
-                    string ltcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/litecoin/");
-                    string adaJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/cardano/");
-                    string xmrJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/monero/");
-                    string vtcJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/vertcoin/");
-                    string navJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/nav-coin/");
-                    string grsJson = client.DownloadString("https://api.coinmarketcap.com/v1/ticker/groestlcoin/");
+                    string btcJson = client.DownloadString("http://coincap.io/page/BTC/");
+                    string ethJson = client.DownloadString("http://coincap.io/page/ETH/");
+                    string ltcJson = client.DownloadString("http://coincap.io/page/LTC/");
+                    string adaJson = client.DownloadString("http://coincap.io/page/ADA/");
+                    string xmrJson = client.DownloadString("http://coincap.io/page/XMR/");
+                    string vtcJson = client.DownloadString("http://coincap.io/page/VTC/");
+                    string navJson = client.DownloadString("http://coincap.io/page/NAV/");
+                    string grsJson = client.DownloadString("http://coincap.io/page/GRS/");
 
                     btcJson = format(btcJson);
                     ethJson = format(ethJson);
