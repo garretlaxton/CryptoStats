@@ -27,15 +27,19 @@ namespace CryptoStats
         public class data
         {
             [JsonProperty("price")]
-            public float price_usd { get; set; }
+            public float price { get; set; }
+
             [JsonProperty("market_cap")]
-            public double market_cap_usd { get; set; }
+            public double marketCap { get; set; }
+
             [JsonProperty("volume")]
-            public float day_volume_usd { get; set; }
+            public float volume { get; set; }
+
             [JsonProperty("supply")]
-            public double available_supply { get; set; }
+            public double supply { get; set; }
+
             [JsonProperty("cap24hrChange")]
-            public float percent_change_24h { get; set; }
+            public float percentChange { get; set; }
         }
 
         private void dataTimer_Tick(object sender, EventArgs e)
@@ -78,60 +82,60 @@ namespace CryptoStats
 
 
                     // Bitcoin
-                    btcPrice.Text = bitcoin.price_usd.ToString("C");
-                    btcMarketCap.Text = bitcoin.market_cap_usd.ToString("C0");
-                    btcVolume.Text = bitcoin.day_volume_usd.ToString("C0");
-                    btcSupply.Text = bitcoin.available_supply.ToString("N0");
-                    btcChange.Text = bitcoin.percent_change_24h.ToString() + "%";
+                    btcPrice.Text = bitcoin.price.ToString("C");
+                    btcMarketCap.Text = bitcoin.marketCap.ToString("C0");
+                    btcVolume.Text = bitcoin.volume.ToString("C0");
+                    btcSupply.Text = bitcoin.supply.ToString("N0");
+                    btcChange.Text = bitcoin.percentChange.ToString() + "%";
 
                     // Ethereum
-                    ethPrice.Text = ether.price_usd.ToString("C");
-                    ethMarketCap.Text = ether.market_cap_usd.ToString("C0");
-                    ethVolume.Text = ether.day_volume_usd.ToString("C0");
-                    ethSupply.Text = ether.available_supply.ToString("N0");
-                    ethChange.Text = ether.percent_change_24h.ToString() + "%";
+                    ethPrice.Text = ether.price.ToString("C");
+                    ethMarketCap.Text = ether.marketCap.ToString("C0");
+                    ethVolume.Text = ether.volume.ToString("C0");
+                    ethSupply.Text = ether.supply.ToString("N0");
+                    ethChange.Text = ether.percentChange.ToString() + "%";
 
                     // Litecoin
-                    ltcPrice.Text = litecoin.price_usd.ToString("C");
-                    ltcMarketCap.Text = litecoin.market_cap_usd.ToString("C0");
-                    ltcVolume.Text = litecoin.day_volume_usd.ToString("C0");
-                    ltcSupply.Text = litecoin.available_supply.ToString("N0");
-                    ltcChange.Text = litecoin.percent_change_24h.ToString() + "%";
+                    ltcPrice.Text = litecoin.price.ToString("C");
+                    ltcMarketCap.Text = litecoin.marketCap.ToString("C0");
+                    ltcVolume.Text = litecoin.volume.ToString("C0");
+                    ltcSupply.Text = litecoin.supply.ToString("N0");
+                    ltcChange.Text = litecoin.percentChange.ToString() + "%";
 
                     // Cardano
-                    adaPrice.Text = cardano.price_usd.ToString("C");
-                    adaMarketCap.Text = cardano.market_cap_usd.ToString("C0");
-                    adaVolume.Text = cardano.day_volume_usd.ToString("C0");
-                    adaSupply.Text = cardano.available_supply.ToString("N0");
-                    adaChange.Text = cardano.percent_change_24h.ToString() + "%";
+                    adaPrice.Text = cardano.price.ToString("C");
+                    adaMarketCap.Text = cardano.marketCap.ToString("C0");
+                    adaVolume.Text = cardano.volume.ToString("C0");
+                    adaSupply.Text = cardano.supply.ToString("N0");
+                    adaChange.Text = cardano.percentChange.ToString() + "%";
 
                     // Monero
-                    xmrPrice.Text = monero.price_usd.ToString("C");
-                    xmrMarketCap.Text = monero.market_cap_usd.ToString("C0");
-                    xmrVolume.Text = monero.day_volume_usd.ToString("C0");
-                    xmrSupply.Text = monero.available_supply.ToString("N0");
-                    xmrChange.Text = monero.percent_change_24h.ToString() + "%";
+                    xmrPrice.Text = monero.price.ToString("C");
+                    xmrMarketCap.Text = monero.marketCap.ToString("C0");
+                    xmrVolume.Text = monero.volume.ToString("C0");
+                    xmrSupply.Text = monero.supply.ToString("N0");
+                    xmrChange.Text = monero.percentChange.ToString() + "%";
 
                     // Vertcoin
-                    vtcPrice.Text = vertcoin.price_usd.ToString("C");
-                    vtcMarketCap.Text = vertcoin.market_cap_usd.ToString("C0");
-                    vtcVolume.Text = vertcoin.day_volume_usd.ToString("C0");
-                    vtcSupply.Text = vertcoin.available_supply.ToString("N0");
-                    vtcChange.Text = vertcoin.percent_change_24h.ToString() + "%";
+                    vtcPrice.Text = vertcoin.price.ToString("C");
+                    vtcMarketCap.Text = vertcoin.marketCap.ToString("C0");
+                    vtcVolume.Text = vertcoin.volume.ToString("C0");
+                    vtcSupply.Text = vertcoin.supply.ToString("N0");
+                    vtcChange.Text = vertcoin.percentChange.ToString() + "%";
 
                     // NAV
-                    navPrice.Text = nav.price_usd.ToString("C");
-                    navMarketCap.Text = nav.market_cap_usd.ToString("C0");
-                    navVolume.Text = nav.day_volume_usd.ToString("C0");
-                    navSupply.Text = nav.available_supply.ToString("N0");
-                    navChange.Text = nav.percent_change_24h.ToString() + "%";
+                    navPrice.Text = nav.price.ToString("C");
+                    navMarketCap.Text = nav.marketCap.ToString("C0");
+                    navVolume.Text = nav.volume.ToString("C0");
+                    navSupply.Text = nav.supply.ToString("N0");
+                    navChange.Text = nav.percentChange.ToString() + "%";
 
                     // Groestl
-                    grsPrice.Text = groestl.price_usd.ToString("C");
-                    grsMarketCap.Text = groestl.market_cap_usd.ToString("C0");
-                    grsVolume.Text = groestl.day_volume_usd.ToString("C0");
-                    grsSupply.Text = groestl.available_supply.ToString("N0");
-                    grsChange.Text = groestl.percent_change_24h.ToString() + "%";
+                    grsPrice.Text = groestl.price.ToString("C");
+                    grsMarketCap.Text = groestl.marketCap.ToString("C0");
+                    grsVolume.Text = groestl.volume.ToString("C0");
+                    grsSupply.Text = groestl.supply.ToString("N0");
+                    grsChange.Text = groestl.percentChange.ToString() + "%";
                 }            
             }
             catch(Exception)
